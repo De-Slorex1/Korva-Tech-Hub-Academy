@@ -11,8 +11,7 @@ export async function POST(req: Request) {
     const body = JSON.parse(rawBody);
 
     // ✅ HEADERS SAFE ACCESS
-    const headersList = headers();
-    const paystackSignature = headersList.get("x-paystack-signature");
+    const paystackSignature = req.headers.get("x-paystack-signature");
 
     // ✅ VERIFY SIGNATURE
     const hash = crypto
