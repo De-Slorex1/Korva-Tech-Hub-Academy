@@ -3,23 +3,17 @@ import { createServerClient } from "@supabase/ssr"
 import type { NextRequest } from "next/server"
 
 export async function middleware(req: NextRequest) {
-  const res = NextResponse.next()
+  let res = NextResponse.next()
 
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
     {
       cookies: {
-        getAll() {
-          return req.cookies.getAll()
-        },
-        setAll(cookiesToSet) {
-          cookiesToSet.forEach(({ name, value, options }) => {
-            res.cookies.set({
-              name,
-              value,
-              ...options,
-            })
+        getAll: () => req.cookies.getAll(),
+        setAll: (cookies) => {
+          cookies.forEach(({ name, value }) => {
+            res.cookies.set(name, value)
           })
         },
       },
@@ -30,13 +24,13 @@ export async function middleware(req: NextRequest) {
     data: { user },
   } = await supabase.auth.getUser()
 
-  if (!user && req.nextUrl.pathname.startsWith("/dashboard")) {
+  const isDashboard = req.nextUrl.pathname.startsWith("/dashboard")
+  const isAdmin = req.nextUrl.pathname.startsWith("/admin")
+  const isInstructor = req.nextUrl.pathname.startsWith("/instructor")
+
+  if (!user && (isDashboard || isAdmin || isInstructor)) {
     return NextResponse.redirect(new URL("/signin", req.url))
   }
 
   return res
-}
-
-export const config = {
-  matcher: ["/dashboard/:path*", "/admin/:path*", "/instructor/:path*"],
 }

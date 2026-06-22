@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect, useState } from "react";
-import { useSearchParams } from "next/navigation";
+import { useSearchParams, useRouter } from "next/navigation";
 import { CheckCircle2, ArrowRight } from "lucide-react";
 import { GridBackground } from "@/components/grid-background";
 
@@ -11,6 +11,7 @@ export default function PaymentSuccessPage() {
 
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState<any>(null);
+  const router = useRouter();
 
 
   const handleDownloadReceipt = async () => {
@@ -148,10 +149,10 @@ export default function PaymentSuccessPage() {
             onClick={handleDownloadReceipt}
             className="px-6 py-3 rounded-xl bg-violet-600 hover:bg-violet-500 transition flex items-center justify-center gap-2"
             >
-            Download Receipt
+            Join Group Chat
           </button>
 
-          <button className="px-6 py-3 rounded-xl border border-white/10 hover:bg-white/5 transition">
+          <button onClick={() => {router.push("/sign-in")}} className="px-6 py-3 rounded-xl border border-white/10 hover:bg-white/5 transition">
             Proceed to Dashboard
           </button>
         </div>

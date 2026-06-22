@@ -5,43 +5,55 @@ import { AtSign, Lock, Eye, EyeOff, Fingerprint, KeyRound } from "lucide-react"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Checkbox } from "@/components/ui/checkbox"
+import { createClient } from "@/lib/supabaseClient"
+import { useRouter } from "next/navigation"
 
 export function SignInCard() {
   const [showPassword, setShowPassword] = useState(false)
   const [userId, setUserId] = useState("")
   const [password, setPassword] = useState("")
   const [loading, setLoading] = useState(false)
+  const router = useRouter()
 
-  const handleLogin = async (e: React.FormEvent) => {
+  async function handleLogin(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
+    setLoading(true)
 
-    const res = await fetch("/api/login", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ userId, password }),
+    const form = new FormData(e.currentTarget)
+    const userId = form.get("userId") as string
+    const password = form.get("password") as string
+
+    const supabase = createClient()
+
+    // 1. Sign in
+    const { data, error } = await supabase.auth.signInWithPassword({
+      email: userId, // you're using email as user_id
+      password,
     })
 
-    const data = await res.json()
-
-    if (!res.ok) {
-      alert(data.error)
+    if (error) {
+      setLoading(false)
+      alert(error.message)
       return
     }
 
-    // store session securely
-    sessionStorage.setItem("korva-session", JSON.stringify(data.session))
+    // 2. Get profile
+    const { data: profile } = await supabase
+      .from("profiles")
+      .select("role")
+      .eq("id", data.user.id)
+      .single()
 
-    // ROLE ROUTING
-    switch (data.role) {
-      case "admin":
-        window.location.href = "/admin"
-        break
-      case "instructor":
-        window.location.href = "/instructor"
-        break
-      default:
-        window.location.href = "/dashboard"
+    // 3. Redirect by role
+    if (profile?.role === "admin") {
+      router.push("/admin")
+    } else if (profile?.role === "instructor") {
+      router.push("/instructor")
+    } else {
+      router.push("/dashboard")
     }
+
+    setLoading(false)
   }
  
 
@@ -65,7 +77,7 @@ export function SignInCard() {
           <Label className="text-white/70">User ID</Label>
           <div className="relative">
             <AtSign className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-white/40" />
-            <Input value={userId}
+            <Input name="userId" value={userId}
               onChange={(e) => setUserId(e.target.value)} className="h-11 border-white/10 bg-black/30 pl-10 text-white"  placeholder="KTH-2026-001" />
           </div>
         </div>
@@ -80,7 +92,8 @@ export function SignInCard() {
           <div className="relative">
             <Lock className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-white/40" />
             <Input
-               type={showPassword ? "text" : "password"}
+              name="password"
+              type={showPassword ? "text" : "password"}
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               className="h-11 border-white/10 bg-black/30 px-10 text-white"

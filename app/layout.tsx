@@ -1,14 +1,15 @@
 import { Analytics } from '@vercel/analytics/next'
 import type { Metadata, Viewport } from 'next'
-import { Geist, Geist_Mono } from 'next/font/google'
+
 import './globals.css'
 import { Toaster } from "sonner"
+const geistSans = {
+  className: "font-sans",
+};
 
-const geistSans = Geist({ variable: '--font-geist-sans', subsets: ['latin'] })
-const geistMono = Geist_Mono({
-  variable: '--font-geist-mono',
-  subsets: ['latin'],
-})
+const geistMono = {
+  className: "font-mono",
+};
 
 export const metadata: Metadata = {
   title: 'Korva Tech Hub Academy',
