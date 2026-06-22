@@ -1,50 +1,75 @@
 import crypto from "crypto";
 import { headers } from "next/headers";
 import { supabaseAdmin } from "@/lib/supabaseAdmin";
+import { sendReceiptEmail } from "@/lib/sendReceiptEmail";
+import { numberToWords } from "@/lib/numberToWords";
 
 export async function POST(req: Request) {
   try {
-    const body = await req.json();
+    // ✅ RAW BODY (IMPORTANT FOR PAYSTACK)
+    const rawBody = await req.text();
+    const body = JSON.parse(rawBody);
 
-    // 1. VERIFY PAYSTACK SIGNATURE (VERY IMPORTANT)
+    // ✅ HEADERS SAFE ACCESS
+    const headersList = headers();
+    const paystackSignature = headersList.get("x-paystack-signature");
+
+    // ✅ VERIFY SIGNATURE
     const hash = crypto
       .createHmac("sha512", process.env.PAYSTACK_SECRET_KEY!)
-      .update(JSON.stringify(body))
+      .update(rawBody)
       .digest("hex");
 
-    const paystackSignature = (await headers()).get("x-paystack-signature");
-
-    if (hash !== paystackSignature) {
+    if (!paystackSignature || hash !== paystackSignature) {
       return new Response("Invalid signature", { status: 401 });
     }
 
-    const event = body.event;
-
-    if (event !== "charge.success") {
+    if (body.event !== "charge.success") {
       return Response.json({ received: true });
     }
 
-    const data = body.data;
-    const reference = data.reference;
-    const amount = data.amount / 100;
+    const { reference, amount: rawAmount } = body.data;
+    const amount = rawAmount / 100;
 
-    // 2. FIND ENROLLMENT
+    // ✅ FIND ENROLLMENT
     const { data: enrollment } = await supabaseAdmin
       .from("enrollments")
       .select("*")
       .eq("paystack_reference", reference)
       .single();
 
-    if (!enrollment) {
-      return Response.json({ received: true });
-    }
+    if (!enrollment) return Response.json({ received: true });
 
-    // 3. PREVENT DUPLICATE PROCESSING
+    // ✅ PREVENT DUPLICATES
     if (enrollment.payment_status === "paid") {
       return Response.json({ received: true });
     }
 
-    // 4. UPDATE ENROLLMENT
+    // ✅ FETCH PROFILE + COURSE
+    const [{ data: profile }, { data: course }] = await Promise.all([
+      supabaseAdmin
+        .from("profiles")
+        .select("*")
+        .eq("user_id", enrollment.user_id)
+        .single(),
+
+      supabaseAdmin
+        .from("Course")
+        .select("*")
+        .eq("id", enrollment.course_id)
+        .single(),
+    ]);
+
+    // ✅ SAFETY CHECK
+    if (!profile || !course) {
+      console.error("Missing profile/course:", reference);
+      return Response.json({ received: true });
+    }
+
+    const fullName =
+      `${profile.first_name || ""} ${profile.last_name || ""}`.trim();
+
+    // ✅ UPDATE ENROLLMENT
     await supabaseAdmin
       .from("enrollments")
       .update({
@@ -53,7 +78,7 @@ export async function POST(req: Request) {
       })
       .eq("id", enrollment.id);
 
-    // 5. CREATE PAYMENT RECORD (safe insert)
+    // ✅ PAYMENT RECORD
     await supabaseAdmin.from("payments").insert({
       enrollment_id: enrollment.id,
       amount,
@@ -61,9 +86,34 @@ export async function POST(req: Request) {
       reference,
     });
 
+    // ✅ SEND EMAIL (RESEND)
+    await sendReceiptEmail({
+      email: profile.email,
+      data: {
+        name: fullName || "Student",
+        email: profile.email,
+        phone: profile.phone,
+        country: profile.country,
+        studentId: enrollment.user_id,
+        receiptId: `KTH-${reference.slice(-8)}`,
+        date: new Date(enrollment.created_at).toLocaleString(),
+        reference,
+        status: "PAID",
+        program: course.name,
+        duration: course.duration,
+        startDate: enrollment.start_date,
+        amount: course.price || amount,
+        amountWords: `${numberToWords(course.price || amount)} Naira Only`,
+      },
+    });
+
     return Response.json({ received: true });
-  } catch (error) {
-    console.error(error);
-    return Response.json({ error: "Webhook failed" }, { status: 500 });
+  } catch (error: any) {
+    console.error("Webhook Error:", error);
+
+    return Response.json(
+      { error: error.message || "Webhook failed" },
+      { status: 500 }
+    );
   }
 }
