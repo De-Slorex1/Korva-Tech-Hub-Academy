@@ -1,0 +1,7 @@
+allowBuilds:
+  '@prisma/engines': false
+  esbuild: false
+  msw: set this to true or false
+  prisma: false
+  puppeteer: false
+  sharp: false
