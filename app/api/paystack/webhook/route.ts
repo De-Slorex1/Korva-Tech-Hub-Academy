@@ -3,12 +3,14 @@ import { headers } from "next/headers";
 import { supabaseAdmin } from "@/lib/supabaseAdmin";
 import { sendReceiptEmail } from "@/lib/sendReceiptEmail";
 import { numberToWords } from "@/lib/numberToWords";
+import { sendLoginEmail } from "@/lib/sendLoginEmail"
 
 export async function POST(req: Request) {
   try {
     // ✅ RAW BODY (IMPORTANT FOR PAYSTACK)
     const rawBody = await req.text();
     const body = JSON.parse(rawBody);
+    const password = Math.random().toString(36).slice(-8)
 
     // ✅ HEADERS SAFE ACCESS
     const paystackSignature = req.headers.get("x-paystack-signature");
@@ -59,6 +61,12 @@ export async function POST(req: Request) {
         .single(),
     ]);
 
+    function generateUserId() {
+      const year = new Date().getFullYear() + 7 // optional future-style
+      const random = Math.floor(100 + Math.random() * 900)
+      return `KTH-${year}-${random}`
+    }
+
     // ✅ SAFETY CHECK
     if (!profile || !course) {
       console.error("Missing profile/course:", reference);
@@ -85,6 +93,22 @@ export async function POST(req: Request) {
       reference,
     });
 
+    const userId = generateUserId()
+
+    await supabaseAdmin
+      .from("profiles")
+      .update({
+        user_id: userId,
+      })
+      .eq("id", profile.id)
+
+    await supabaseAdmin
+      .from("profiles")
+      .update({
+        password_temp: password,
+      })
+      .eq("id", profile.id)
+
     // ✅ SEND EMAIL (RESEND)
     await sendReceiptEmail({
       email: profile.email,
@@ -105,6 +129,12 @@ export async function POST(req: Request) {
         amountWords: `${numberToWords(course.price || amount)} Naira Only`,
       },
     });
+
+    await sendLoginEmail({
+      email: profile.email,
+      userId,
+      password,
+    })
 
     return Response.json({ received: true });
   } catch (error: any) {
