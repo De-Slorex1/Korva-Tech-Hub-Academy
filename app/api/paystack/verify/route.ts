@@ -12,7 +12,7 @@ export async function POST(req: Request) {
       );
     }
 
-    // 1. Verify with Paystack
+    // 1. Verify with Paystack (SAFE PARSE)
     const paystackRes = await fetch(
       `https://api.paystack.co/transaction/verify/${reference}`,
       {
@@ -22,18 +22,27 @@ export async function POST(req: Request) {
       }
     );
 
-    const paystackData = await paystackRes.json();
+    let paystackData;
 
-    if (!paystackRes.ok) {
+    try {
+      paystackData = await paystackRes.json();
+    } catch (err) {
       return NextResponse.json(
-        { error: "Paystack request failed" },
+        { error: "Invalid Paystack response" },
+        { status: 500 }
+      );
+    }
+
+    if (!paystackRes.ok || !paystackData?.data) {
+      return NextResponse.json(
+        { error: "Paystack verification failed" },
         { status: 500 }
       );
     }
 
     const paymentData = paystackData.data;
 
-    // 2. Check payment success
+    // 2. Validate payment status
     if (paymentData.status !== "success") {
       return NextResponse.json({
         success: false,
@@ -41,8 +50,8 @@ export async function POST(req: Request) {
       });
     }
 
-    const metadata = paymentData.metadata;
-    const enrollmentId = metadata?.enrollmentId;
+    // 3. Validate metadata safely
+    const enrollmentId = paymentData?.metadata?.enrollmentId;
 
     if (!enrollmentId) {
       return NextResponse.json(
@@ -51,7 +60,21 @@ export async function POST(req: Request) {
       );
     }
 
-    // 3. Update DB
+    // 4. Check if already paid (prevents duplicates)
+    const { data: existing } = await supabaseAdmin
+      .from("enrollments")
+      .select("payment_status")
+      .eq("id", enrollmentId)
+      .single();
+
+    if (existing?.payment_status === "paid") {
+      return NextResponse.json({
+        success: true,
+        message: "Already verified",
+      });
+    }
+
+    // 5. Update DB
     const { error: updateError } = await supabaseAdmin
       .from("enrollments")
       .update({
@@ -69,10 +92,9 @@ export async function POST(req: Request) {
       );
     }
 
-    // ✅ SUCCESS RESPONSE (ONLY PLACE IT SHOULD EXIST)
     return NextResponse.json({
       success: true,
-      message: "Payment verified and enrollment activated",
+      message: "Payment verified successfully",
       enrollmentId,
     });
 

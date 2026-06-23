@@ -1,33 +1,41 @@
-import { resend } from "./resend"
+import { resend } from "./resend";
 
 export async function sendLoginEmail({
   email,
-  userId,
-  password,
+  data,
 }: {
-  email: string
-  userId: string
-  password: string
+  email: string;
+  data: {
+    email: string;
+    userId: string;
+    password: string;
+    loginMethod: string;
+    note?: string;
+  };
 }) {
   await resend.emails.send({
     from: "Korva Tech Hub <noreply@korvatechhub.com>",
     to: email,
     subject: "Your Login Details - Korva Tech Hub",
     html: `
-      <div style="font-family: Arial; padding:20px">
+      <div style="font-family: Arial; padding: 20px;">
         <h2>Welcome to Korva Tech Hub 🎓</h2>
 
-        <p>Your payment was successful. Here are your login details:</p>
+        <p>Here are your login details:</p>
 
-        <div style="background:#111;color:#fff;padding:15px;border-radius:8px">
-          <p><b>User ID:</b> ${userId}</p>
-          <p><b>Password:</b> ${password}</p>
-        </div>
+        <ul>
+          <li><strong>Email:</strong> ${data.email}</li>
+          <li><strong>User ID:</strong> ${data.userId}</li>
+          <li><strong>Password:</strong> ${data.password}</li>
+          <li><strong>Login Method:</strong> ${data.loginMethod}</li>
+        </ul>
 
-        <p>Login here: https://korvatechhub.com/signin</p>
+        <p style="margin-top:20px; color: gray;">
+          ${data.note || ""}
+        </p>
 
         <p>Keep this safe.</p>
       </div>
     `,
-  })
+  });
 }

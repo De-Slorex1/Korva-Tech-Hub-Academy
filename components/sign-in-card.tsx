@@ -10,9 +10,9 @@ import { useRouter } from "next/navigation"
 
 export function SignInCard() {
   const [showPassword, setShowPassword] = useState(false)
-  const [userId, setUserId] = useState("")
   const [password, setPassword] = useState("")
   const [loading, setLoading] = useState(false)
+  const [email, setEmail] = useState("")
   const router = useRouter()
 
   async function handleLogin(e: React.FormEvent<HTMLFormElement>) {
@@ -20,14 +20,13 @@ export function SignInCard() {
     setLoading(true)
 
     const form = new FormData(e.currentTarget)
-    const userId = form.get("userId") as string
     const password = form.get("password") as string
 
     const supabase = createClient()
 
     // 1. Sign in
     const { data, error } = await supabase.auth.signInWithPassword({
-      email: userId, // you're using email as user_id
+      email: form.get("email") as string,
       password,
     })
 
@@ -73,13 +72,17 @@ export function SignInCard() {
       <form onSubmit={handleLogin} className="relative mt-8 flex flex-col gap-5">
 
         {/* email */}
-        <div className="space-y-2">
-          <Label className="text-white/70">User ID</Label>
-          <div className="relative">
-            <AtSign className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-white/40" />
-            <Input name="userId" value={userId}
-              onChange={(e) => setUserId(e.target.value)} className="h-11 border-white/10 bg-black/30 pl-10 text-white"  placeholder="KTH-2026-001" />
-          </div>
+        <Label className="text-white/70">Email</Label>
+        <div className="relative">
+          <AtSign className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-white/40" />
+          <Input
+            name="email"
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            className="h-11 border-white/10 bg-black/30 pl-10 text-white"
+            placeholder="you@example.com"
+          />
         </div>
 
         {/* password */}
