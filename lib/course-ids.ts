@@ -4,6 +4,8 @@ export const COURSE_IDS = {
   bea: "ef8e5823-3f06-4a99-96da-6049a80a3dc3",
   fsa: "b9970da6-5487-4851-8805-b7e38840bc88",
   dia: "bf90284a-976f-4f8f-bc88-d0110a959b67",
+  dsm: "b549c6f8-885c-477a-8617-a25a1deb2705",
+  uix: "96af46bd-bcce-44a1-8b31-bff89048796a"
 }
 
 // Reverse lookup: course_id → code

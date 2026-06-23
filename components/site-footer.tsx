@@ -167,63 +167,7 @@ export function SiteFooter() {
           </div>
         </div>
       </div>
-
-      {/* Admissions bar */}
-      <div className="w-full bg-[#1a1a22]">
-        <div className="mx-auto flex max-w-7xl flex-col gap-6 px-4 py-6 sm:px-6 lg:flex-row lg:items-center lg:justify-between lg:px-8">
-
-          {/* LEFT SECTION */}
-          <div className="flex items-start gap-4 sm:items-center">
-            <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-[#9333ea]">
-              <GraduationCap className="h-6 w-6 text-white" />
-            </span>
-
-            <div>
-              <p className="text-xs uppercase tracking-wider text-neutral-400">
-                Selected Specialization
-              </p>
-              <p className="text-base sm:text-lg font-semibold text-white">
-                Full-Stack Development
-              </p>
-            </div>
-          </div>
-
-          {/* RIGHT SECTION */}
-          <div className="flex flex-col gap-4 sm:flex-row sm:items-center lg:gap-6">
-
-            {/* DATE */}
-            <div className="sm:text-right">
-              <p className="text-xs uppercase tracking-wider text-neutral-400">
-                Start Date
-              </p>
-              <p className="text-sm sm:text-base font-medium text-white">
-                November 12, 2024
-              </p>
-            </div>
-
-            {/* divider (only desktop) */}
-            <div className="hidden h-10 w-px bg-neutral-700 lg:block" />
-
-            {/* BUTTON */}
-            <button className="
-              w-full sm:w-auto
-              rounded-xl sm:rounded-full
-              bg-[#c4a8f5]
-              px-6 sm:px-8
-              py-3 sm:py-4
-              text-sm sm:text-base
-              font-semibold
-              text-[#4c1d95]
-              transition-colors
-              hover:bg-[#b794f6]
-              active:scale-[0.98]
-            ">
-              Continue to Admissions
-            </button>
-          </div>
-
-        </div>
-      </div>
+      
     </footer>
   )
 }

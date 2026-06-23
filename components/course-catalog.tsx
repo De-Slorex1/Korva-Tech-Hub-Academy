@@ -53,8 +53,8 @@ type Program = {
 export function CourseCatalog() {
   const router = useRouter()
   const [query, setQuery] = useState("")
-  const [levelFilter, setLevelFilter] = useState<string>("all")
-  const [categoryFilter, setCategoryFilter] = useState<string>("all")
+  const [levelFilter, setLevelFilter] = useState<string>("")
+  const [categoryFilter, setCategoryFilter] = useState<string>("")
 
   const filteredCourses = courses.filter((course) => {
     const searchTerm = query.toLowerCase()
@@ -70,13 +70,8 @@ export function CourseCatalog() {
         item.toLowerCase().includes(searchTerm)
       )
 
-    const matchesLevel =
-      levelFilter === "all" ||
-      course.levelLabel === levelFilter
-
-    const matchesCategory =
-      categoryFilter === "all" ||
-      course.category === categoryFilter
+    const matchesLevel = !levelFilter || course.levelLabel === levelFilter
+    const matchesCategory = !categoryFilter || course.category === categoryFilter
 
     return (
       matchesSearch &&
@@ -143,11 +138,11 @@ export function CourseCatalog() {
                   text-white
                 "
               >
-                <SelectValue placeholder="All Levels" />
+                <SelectValue placeholder="Levels" />
               </SelectTrigger>
 
               <SelectContent className="border-neutral-800 bg-[#0a0a0f] text-white">
-                <SelectItem value="all">All Levels</SelectItem>
+                <SelectItem value="">All Levels</SelectItem>
 
                 <SelectItem value="Beginner">
                   Beginner
@@ -181,11 +176,11 @@ export function CourseCatalog() {
                   text-white
                 "
               >
-                <SelectValue placeholder="All Categories" />
+                <SelectValue placeholder="Categories" />
               </SelectTrigger>
 
             <SelectContent className="border-neutral-800 bg-[#0a0a0f] text-white">
-              <SelectItem value="all">
+              <SelectItem value="">
                 All Categories
               </SelectItem>
 

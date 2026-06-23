@@ -90,6 +90,11 @@ export default async function LearningPage() {
       : ""
     )
 
+    console.log("user id:", user!.id)
+    console.log("enrollments:", enrollments)
+    console.log("lessonProgress:", lessonProgress)
+    console.log("studySessions:", studySessions)
+
   return (
     <LearningClient
       enrollments={enrichedEnrollments}

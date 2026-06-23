@@ -1654,7 +1654,768 @@ const courses = [
     lifetimeAccess: true,
 
     mentors: ["/mentor-1.png", "/mentor-3.png"]
-    }
+    },
+    {
+    level: 6,
+    code: "dsm",
+
+    title: "Data Science & Machine Learning",
+    tagline: "Build intelligent systems with data and AI",
+
+    description:
+        "Master data science, machine learning, statistics, data engineering workflows, and AI-powered analytics. Learn how to collect, prepare, analyze, model, evaluate, and deploy machine learning solutions using industry-standard tools and real-world datasets.",
+
+    image: "/data-science.png",
+    previewVideo: "/data-science-preview.mp4",
+
+    duration: "6 Months",
+
+    price: {
+        fullPayment: {
+        discounted: "₦300,000",
+        original: "₦380,000"
+        },
+
+        installment: {
+        discounted: "₦340,000",
+        original: "₦380,000"
+        }
+    },
+
+    rating: 4.9,
+    students: 120,
+    projects: 12,
+    certificate: true,
+
+    category: "Data Science",
+    levelLabel: "Intermediate",
+
+    color: "#22c55e",
+
+    stack: [
+        "Python",
+        "NumPy",
+        "Pandas",
+        "Scikit-Learn",
+        "SQL",
+        "Matplotlib",
+        "Seaborn",
+        "Plotly",
+        "MLflow",
+        "GitHub",
+        "Jupyter Notebook",
+        "Machine Learning"
+    ],
+
+    aiTouch: [
+        "AI-assisted data analysis",
+        "AI feature engineering",
+        "AI model evaluation",
+        "AI experiment tracking",
+        "AI documentation workflows",
+        "AI-powered data storytelling"
+    ],
+
+    stats: [
+        {
+        label: "Students",
+        value: "120+"
+        },
+        {
+        label: "Projects",
+        value: "12"
+        },
+        {
+        label: "Duration",
+        value: "6 Months"
+        },
+        {
+        label: "Rating",
+        value: "4.9"
+        }
+    ],
+
+    overview:
+        "This intensive Data Science and Machine Learning program teaches students how to collect, prepare, analyze, model, and interpret data to solve real-world business problems. Students learn statistics, machine learning, feature engineering, model evaluation, experiment tracking, and professional project workflows while building a portfolio of industry-standard projects.",
+
+    outcomes: [
+        "Write Python for data science projects",
+        "Perform exploratory data analysis",
+        "Apply statistical techniques to business problems",
+        "Collect and prepare real-world datasets",
+        "Build supervised machine learning models",
+        "Perform feature engineering",
+        "Evaluate and improve ML models",
+        "Build clustering and recommendation systems",
+        "Track machine learning experiments",
+        "Document and version models professionally",
+        "Deploy reproducible machine learning workflows",
+        "Build a professional data science portfolio"
+    ],
+
+    curriculum: [
+        {
+        title: "Module 1: Python for Data Science",
+        duration: "2 Weeks",
+        lessons: [
+            "Python Fundamentals",
+            "Control Flow & Comprehensions",
+            "Functions",
+            "OOP Basics",
+            "NumPy",
+            "Pandas",
+            "Jupyter Notebooks",
+            "VS Code Setup",
+            "Git & GitHub Fundamentals"
+        ]
+        },
+
+        {
+        title: "Module 2: Statistics & Mathematics for Data Science",
+        duration: "3 Weeks",
+        lessons: [
+            "Descriptive Statistics",
+            "Probability",
+            "Bayes' Theorem",
+            "Sampling & Distributions",
+            "Hypothesis Testing",
+            "Correlation",
+            "Regression Concepts",
+            "Linear Algebra Fundamentals"
+        ]
+        },
+
+        {
+        title: "Module 3: Data Collection & Preparation",
+        duration: "2 Weeks",
+        lessons: [
+            "SQL for Data Science",
+            "APIs",
+            "Web Scraping",
+            "Data Cleaning",
+            "Feature Creation",
+            "Data Profiling",
+            "JSON & CSV Processing",
+            "Data Quality Checks"
+        ]
+        },
+
+        {
+        title: "Module 4: EDA & Data Visualization",
+        duration: "2 Weeks",
+        lessons: [
+            "EDA Workflow",
+            "Data Storytelling",
+            "Matplotlib",
+            "Seaborn",
+            "Plotly",
+            "Confidence Intervals",
+            "Visual Communication",
+            "Business Reporting"
+        ]
+        },
+
+        {
+        title: "Module 5: Supervised Machine Learning",
+        duration: "4 Weeks",
+        lessons: [
+            "Machine Learning Workflow",
+            "Train/Test Split",
+            "Cross Validation",
+            "Model Evaluation",
+            "Bias-Variance Tradeoff",
+            "Linear Regression",
+            "Logistic Regression",
+            "Decision Trees",
+            "Random Forest",
+            "Gradient Boosting",
+            "XGBoost",
+            "Naive Bayes",
+            "SVM Concepts"
+        ]
+        },
+
+        {
+        title: "Module 6: Feature Engineering & Model Improvement",
+        duration: "2 Weeks",
+        lessons: [
+            "Encoding Techniques",
+            "Feature Selection",
+            "Scaling",
+            "GridSearch",
+            "Missing Values",
+            "Class Imbalance",
+            "SMOTE",
+            "Scikit-Learn Pipelines"
+        ]
+        },
+
+        {
+        title: "Module 7: Unsupervised Learning",
+        duration: "3 Weeks",
+        lessons: [
+            "K-Means",
+            "DBSCAN",
+            "Hierarchical Clustering",
+            "PCA",
+            "t-SNE",
+            "UMAP",
+            "Recommendation Systems",
+            "Anomaly Detection"
+        ]
+        },
+
+        {
+        title: "Module 8: Model Saving & Handoff",
+        duration: "1 Week",
+        lessons: [
+            "Pickle",
+            "Joblib",
+            "Inference Scripts",
+            "MLflow",
+            "Versioning",
+            "Model Documentation",
+            "Model Cards"
+        ]
+        },
+
+        {
+        title: "Module 9: Professional Practice",
+        duration: "1 Week",
+        lessons: [
+            "Reproducibility",
+            "Project Structure",
+            "Data Ethics",
+            "Fairness Metrics",
+            "Business Impact Measurement",
+            "Technical Documentation",
+            "Reading Research Papers"
+        ]
+        },
+
+        {
+        title: "Module 10: End-to-End Capstone Project",
+        duration: "2 Weeks",
+        lessons: [
+            "Fraud Detection",
+            "Customer Churn Prediction",
+            "Demand Forecasting",
+            "Recommendation Systems",
+            "Risk Modelling",
+            "NLP Sentiment Analysis",
+            "Technical Presentation",
+            "Peer Review"
+        ]
+        },
+
+        {
+        title: "Module 11: Career Preparation",
+        duration: "1 Week",
+        lessons: [
+            "Portfolio Building",
+            "CV Optimization",
+            "Technical Interviews",
+            "SQL Interview Practice",
+            "ML Theory Preparation",
+            "LinkedIn Optimization",
+            "Freelancing",
+            "Consulting Fundamentals"
+        ]
+        }
+    ],
+
+    projectsList: [
+        {
+        title: "Exploratory Data Analysis Project",
+        description:
+            "Analyze a messy real-world dataset and uncover actionable insights."
+        },
+
+        {
+        title: "Business Intelligence & EDA Report",
+        description:
+            "Build a professional report with executive-level recommendations."
+        },
+
+        {
+        title: "Machine Learning Prediction System",
+        description:
+            "Develop and evaluate predictive models for real-world business use cases."
+        },
+
+        {
+        title: "Customer Segmentation Project",
+        description:
+            "Build clustering models and provide business recommendations."
+        },
+
+        {
+        title: "Recommendation Engine",
+        description:
+            "Create a recommendation system using machine learning techniques."
+        }
+    ],
+
+    capstoneProject: {
+        title: "End-to-End Machine Learning Solution",
+
+        description:
+        "Design, document, evaluate, and present a complete machine learning solution including data preparation, modeling, experiment tracking, saved model artefacts, inference scripts, technical documentation, and business presentation."
+    },
+
+    instructors: [
+        {
+        name: "Korva Tech Mentor",
+        role: "Data Scientist & ML Engineer",
+        image: "/mentor-1.png",
+        experience: "6+ Years"
+        }
+    ],
+
+    requirements: [
+        "Basic computer literacy",
+        "Laptop with internet connection",
+        "Willingness to work with data",
+        "Basic mathematics understanding"
+    ],
+
+    targetAudience: [
+        "Aspiring Data Scientists",
+        "Data Analysts transitioning into ML",
+        "Business Intelligence Professionals",
+        "Developers interested in AI",
+        "Career Switchers",
+        "Research Enthusiasts"
+    ],
+
+    careerPaths: [
+        "Data Scientist",
+        "Machine Learning Engineer",
+        "AI Engineer",
+        "Data Analyst",
+        "Business Intelligence Analyst",
+        "Research Analyst",
+        "Applied AI Specialist"
+    ],
+
+    includes: [
+        "Live Instructor-Led Classes",
+        "Hands-On Machine Learning Projects",
+        "Capstone Project",
+        "Industry Datasets",
+        "GitHub Portfolio Development",
+        "Career Guidance",
+        "Mentorship Support",
+        "Certificate of Completion",
+        "Community Access",
+        "Interview Preparation"
+    ],
+
+    faqs: [
+        {
+        question: "Do I need programming experience?",
+        answer:
+            "Basic programming knowledge is helpful but not mandatory. The course starts with Python fundamentals."
+        },
+
+        {
+        question: "Will I learn Machine Learning?",
+        answer:
+            "Yes. Machine Learning is a core component of the curriculum covering both supervised and unsupervised learning."
+        },
+
+        {
+        question: "Will I build real projects?",
+        answer:
+            "Absolutely. Students complete multiple industry-relevant projects and a capstone solution."
+        },
+
+        {
+        question: "Will I receive a certificate?",
+        answer:
+            "Yes. Students receive a certificate after successfully completing the program."
+        }
+    ],
+
+    courseOutline: "11",
+
+    courseDuration: "6 Months",
+
+    classSchedule: "4 Days / Week",
+
+    classFormat: "2 Hours Daily",
+
+    skillLevel: "Intermediate",
+
+    careerPath:
+        "Data Scientist, Machine Learning Engineer, AI Engineer, Data Analyst, Analytics Consultant",
+
+    portfolioProjects: 12,
+
+    studyMaterials: true,
+
+    internship: true,
+
+    examIncluded: true,
+
+    communityAccess: true,
+
+    mentorSupport: true,
+
+    lifetimeAccess: true,
+
+    mentors: ["/mentor-1.png"]
+    },
+    {
+level: 2,
+code: "uix",
+
+title: "UI/UX Design Mastery",
+tagline: "Design digital experiences users love",
+
+description:
+"Learn user interface design, user experience design, wireframing, prototyping, design systems, user research, usability testing, and modern product design workflows using industry-standard tools and real-world projects.",
+
+image: "/uiux.png",
+previewVideo: "/uiux-preview.mp4",
+
+duration: "2 Months",
+
+price: {
+fullPayment: {
+discounted: "₦120,000",
+original: "₦150,000"
+},
+
+installment: {
+  discounted: "₦135,000",
+  original: "₦150,000"
+}
+
+},
+
+rating: 4.9,
+students: 180,
+projects: 8,
+certificate: true,
+
+category: "UI/UX",
+levelLabel: "Beginner to Intermediate",
+
+color: "#8b5cf6",
+
+stack: [
+"Figma",
+"UI Design",
+"UX Design",
+"Wireframing",
+"Prototyping",
+"Design Systems",
+"User Research",
+"Usability Testing"
+],
+
+aiTouch: [
+"AI design assistants",
+"AI user research support",
+"AI content generation",
+"AI wireframe generation",
+"AI design feedback",
+"AI productivity workflows"
+],
+
+stats: [
+{
+label: "Students",
+value: "180+"
+},
+{
+label: "Projects",
+value: "8"
+},
+{
+label: "Duration",
+value: "2 Months"
+},
+{
+label: "Rating",
+value: "4.9"
+}
+],
+
+overview:
+"Master the complete product design process from research to high-fidelity design. Learn how to understand users, create intuitive experiences, design beautiful interfaces, build prototypes, conduct usability testing, and present professional case studies that attract employers and clients.",
+
+outcomes: [
+"Understand UI and UX principles",
+"Conduct user research",
+"Create user personas",
+"Design user flows",
+"Build wireframes",
+"Create interactive prototypes",
+"Design responsive interfaces",
+"Build design systems",
+"Conduct usability testing",
+"Present professional case studies",
+"Create portfolio-ready projects",
+"Use AI to accelerate design workflows"
+],
+
+curriculum: [
+{
+  title: "Module 1: UI/UX Foundations",
+  duration: "1 Week",
+  lessons: [
+    "Introduction to UI Design",
+    "Introduction to UX Design",
+    "Design Thinking",
+    "Product Design Process",
+    "Understanding Users",
+    "Design Principles"
+  ]
+},
+
+{
+  title: "Module 2: User Research & UX Strategy",
+  duration: "1 Week",
+  lessons: [
+    "User Research Methods",
+    "Competitor Analysis",
+    "Stakeholder Interviews",
+    "User Personas",
+    "Empathy Mapping",
+    "Customer Journey Mapping"
+  ]
+},
+
+{
+  title: "Module 3: Information Architecture",
+  duration: "1 Week",
+  lessons: [
+    "Content Organization",
+    "User Flows",
+    "Task Flows",
+    "Navigation Systems",
+    "Site Mapping",
+    "UX Planning"
+  ]
+},
+
+{
+  title: "Module 4: Wireframing & Low-Fidelity Design",
+  duration: "1 Week",
+  lessons: [
+    "Sketching Interfaces",
+    "Low-Fidelity Wireframes",
+    "Mobile Wireframes",
+    "Web Wireframes",
+    "Layout Planning",
+    "Rapid Ideation"
+  ]
+},
+
+{
+  title: "Module 5: Figma Mastery",
+  duration: "2 Weeks",
+  lessons: [
+    "Figma Interface",
+    "Frames & Layouts",
+    "Auto Layout",
+    "Components",
+    "Variants",
+    "Constraints",
+    "Libraries",
+    "Team Collaboration"
+  ]
+},
+
+{
+  title: "Module 6: UI Design & Design Systems",
+  duration: "1 Week",
+  lessons: [
+    "Typography",
+    "Color Theory",
+    "Spacing Systems",
+    "Visual Hierarchy",
+    "Accessibility",
+    "Design Systems",
+    "Component Libraries"
+  ]
+},
+
+{
+  title: "Module 7: Prototyping & Usability Testing",
+  duration: "1 Week",
+  lessons: [
+    "Interactive Prototypes",
+    "Micro Interactions",
+    "Usability Testing",
+    "User Feedback",
+    "Iteration",
+    "Design Validation"
+  ]
+},
+
+{
+  title: "Module 8: Portfolio & Career Development",
+  duration: "1 Week",
+  lessons: [
+    "Case Study Writing",
+    "Portfolio Design",
+    "LinkedIn Optimization",
+    "Freelancing",
+    "Design Interviews",
+    "Client Communication"
+  ]
+}
+],
+
+projectsList: [
+{
+title: "Mobile Banking App Design",
+description:
+"Design a modern mobile banking experience from research to prototype."
+},
+
+{
+  title: "E-Commerce Website Design",
+  description:
+    "Create a complete online shopping experience with responsive layouts."
+},
+
+{
+  title: "Food Delivery App",
+  description:
+    "Design user-friendly ordering and checkout experiences."
+},
+
+{
+  title: "Startup Landing Page",
+  description:
+    "Design a high-converting marketing website."
+},
+
+{
+  title: "Design System Project",
+  description:
+    "Build a reusable design system and component library."
+}
+
+],
+
+capstoneProject: {
+title: "End-to-End Product Design Case Study",
+
+description:
+  "Research, design, prototype, test, and present a complete digital product solution with user research, wireframes, high-fidelity designs, usability findings, and a professional case study."
+
+},
+
+instructors: [
+{
+name: "Korva Tech Mentor",
+role: "Senior Product Designer",
+image: "/mentor-1.png",
+experience: "6+ Years"
+}
+],
+
+requirements: [
+"No prior experience required",
+"Laptop with internet connection",
+"Willingness to learn design thinking",
+"Interest in solving user problems"
+],
+
+targetAudience: [
+"Aspiring UI Designers",
+"Aspiring UX Designers",
+"Product Designers",
+"Freelancers",
+"Students",
+"Career Switchers",
+"Startup Founders"
+],
+
+careerPaths: [
+"UI Designer",
+"UX Designer",
+"Product Designer",
+"Visual Designer",
+"Interaction Designer",
+"Freelance Designer"
+],
+
+includes: [
+"Live Instructor-Led Classes",
+"Hands-On Design Projects",
+"Figma Mastery",
+"Portfolio Development",
+"Capstone Project",
+"Mentorship Support",
+"Career Guidance",
+"Certificate of Completion",
+"Community Access",
+"Interview Preparation"
+],
+
+faqs: [
+{
+question: "Do I need design experience?",
+answer:
+"No. This course starts from the fundamentals and guides you to professional-level design workflows."
+},
+
+{
+  question: "Will I learn Figma?",
+  answer:
+    "Yes. Figma is the primary design tool used throughout the program."
+},
+
+{
+  question: "Will I build a portfolio?",
+  answer:
+    "Absolutely. Students complete multiple projects and a professional capstone case study."
+},
+
+{
+  question: "Can I work as a UI/UX Designer after this course?",
+  answer:
+    "Yes. The curriculum is designed to help students build the practical skills and portfolio required for entry-level UI/UX roles."
+}
+
+],
+
+courseOutline: "8",
+
+courseDuration: "2 Months",
+
+classSchedule: "4 Days / Week",
+
+classFormat: "2 Hours Daily",
+
+skillLevel: "Beginner to Intermediate",
+
+careerPath:
+"UI Designer, UX Designer, Product Designer, Visual Designer, Interaction Designer",
+
+portfolioProjects: 8,
+
+studyMaterials: true,
+
+internship: true,
+
+examIncluded: true,
+
+communityAccess: true,
+
+mentorSupport: true,
+
+lifetimeAccess: true,
+
+mentors: ["/mentor-1.png"]
+}
+
 ]
 
-export default courses
+export default courses;
