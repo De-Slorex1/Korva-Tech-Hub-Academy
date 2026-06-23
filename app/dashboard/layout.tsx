@@ -1,6 +1,7 @@
 import { redirect } from "next/navigation"
 import { createServerClient } from "@supabase/ssr"
 import { cookies } from "next/headers"
+import DashboarShell from "./DashboardClientLayout"
 
 export default async function DashboardLayout({
   children,
@@ -24,5 +25,5 @@ export default async function DashboardLayout({
   if (!user) redirect("/sign-in")
 
   // No role restriction for now — just check they're logged in
-  return <>{children}</>
+  return <DashboarShell>{children}</DashboarShell>
 }

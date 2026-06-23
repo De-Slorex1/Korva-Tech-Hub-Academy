@@ -59,7 +59,7 @@ const navigationItems = [
   },
 ]
 
-export default function DashboardLayout({
+export default function DashboarShell({
   children,
 }: {
   children: React.ReactNode
