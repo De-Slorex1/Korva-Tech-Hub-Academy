@@ -2064,7 +2064,7 @@ const courses = [
 
     lifetimeAccess: true,
 
-    mentors: ["/mentor-1.png"]
+    mentors: ["/dsm.png"]
     },
     {
 level: 2,
@@ -2413,7 +2413,7 @@ mentorSupport: true,
 
 lifetimeAccess: true,
 
-mentors: ["/mentor-1.png"]
+mentors: ["/uiux.png"]
 }
 
 ]
