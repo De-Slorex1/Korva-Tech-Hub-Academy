@@ -27,6 +27,9 @@ export default async function DashboardPage() {
     .eq("user_id", user!.id)
     .single()
 
+  console.log("user id:", user!.id)
+  console.log("profile result:", profile)
+  
   const { data: enrollments } = await supabase
     .from("enrollments")
     .select(`

@@ -124,7 +124,7 @@ export default function DashboardShell({
         ))}
       </nav>
 
-      // Replace the User Profile section at the bottom of SidebarContent with:
+      {/* // Replace the User Profile section at the bottom of SidebarContent with: */}
       <div className="p-4 border-t border-border">
         <div className="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-muted transition-colors">
           <div className="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center">
