@@ -1,7 +1,8 @@
 
 export type PaymentStatus =
   | "pending"
-  | "paid"
+  | "success"
+  | "failed"
 
 export type EnrollmentStatus =
   | "pending"
@@ -26,7 +27,7 @@ export interface Enrollment {
 
   paymentPlan: PaymentPlan
 
-  paymentStatus: "pending" | "paid"
+  paymentStatus: "pending" | "success"  | "failed"
 
   paymentReference: string
 

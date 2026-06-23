@@ -67,7 +67,7 @@ export async function POST(req: Request) {
       .eq("id", enrollmentId)
       .single();
 
-    if (existing?.payment_status === "paid") {
+    if (existing?.payment_status === "success") {
       return NextResponse.json({
         success: true,
         message: "Already verified",
@@ -78,7 +78,7 @@ export async function POST(req: Request) {
     const { error: updateError } = await supabaseAdmin
       .from("enrollments")
       .update({
-        payment_status: "paid",
+        payment_status: "success",
         status: "active",
         paystack_verified: true,
         paid_at: new Date().toISOString(),

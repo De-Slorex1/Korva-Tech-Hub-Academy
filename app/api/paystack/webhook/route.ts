@@ -59,7 +59,7 @@ export async function POST(req: Request) {
     }
 
     // Prevent duplicate processing
-    if (enrollment.payment_status === "paid") {
+    if (enrollment.payment_status === "success") {
       return Response.json({ received: true });
     }
 
@@ -108,7 +108,7 @@ export async function POST(req: Request) {
       .from("enrollments")
       .update({
         status: "active",
-        payment_status: "paid",
+        payment_status: "success",
       })
       .eq("id", enrollment.id);
 

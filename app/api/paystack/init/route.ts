@@ -43,7 +43,7 @@ export async function POST(req: Request) {
     }
 
     // 3. Prevent duplicate payment
-    if (enrollment.payment_status === "paid") {
+    if (enrollment.payment_status === "success") {
       return NextResponse.json({ message: "Already paid" });
     }
 
@@ -51,7 +51,7 @@ export async function POST(req: Request) {
     let amount = course.price;
 
     if (enrollment.payment_plan === "installment") {
-      amount = course.price / 2;
+      amount = Math.round(course.price * 0.25);
     }
 
     if (enrollment.payment_plan === "scholarship") {
