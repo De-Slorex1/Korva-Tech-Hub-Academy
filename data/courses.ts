@@ -2064,7 +2064,7 @@ const courses = [
 
     lifetimeAccess: true,
 
-    mentors: ["/dsm.png"]
+    mentors: ["/uiux.png"]
     },
     {
 level: 2,
