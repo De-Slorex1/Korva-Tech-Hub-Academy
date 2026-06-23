@@ -25,10 +25,8 @@ export function SignInCard() {
     const supabase = createClient()
 
     // 1. Sign in
-    const { data, error } = await supabase.auth.signInWithPassword({
-      email,
-      password,
-    })
+   // 1. Sign in
+    const { data, error } = await supabase.auth.signInWithPassword({ email, password })
 
     if (error) {
       setLoading(false)
@@ -36,22 +34,14 @@ export function SignInCard() {
       return
     }
 
-    // FORCE SESSION SYNC
-    await supabase.auth.getSession()
-
-    setTimeout(() => {
-      router.push("/dashboard")
-      router.refresh()
-    }, 250)
-
-    // 2. Get profile
+    // 2. Get profile FIRST
     const { data: profile } = await supabase
       .from("profiles")
       .select("role")
       .eq("id", data.user.id)
       .single()
 
-    // 3. Redirect by role
+    // 3. THEN redirect based on role
     if (profile?.role === "admin") {
       router.push("/admin")
     } else if (profile?.role === "instructor") {

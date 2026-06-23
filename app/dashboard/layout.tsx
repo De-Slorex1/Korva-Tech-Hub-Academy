@@ -7,7 +7,7 @@ export default async function DashboardLayout({
 }: {
   children: React.ReactNode
 }) {
-  const cookieStore = cookies()
+  const cookieStore = await cookies() // ← await here
 
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -20,10 +20,7 @@ export default async function DashboardLayout({
     }
   )
 
-  const {
-    data: { user },
-  } = await supabase.auth.getUser()
-
+  const { data: { user } } = await supabase.auth.getUser()
   if (!user) redirect("/sign-in")
 
   const { data: profile } = await supabase
@@ -32,9 +29,7 @@ export default async function DashboardLayout({
     .eq("id", user.id)
     .single()
 
-  if (!profile || profile.role !== "student") {
-    redirect("/sign-in")
-  }
+  if (!profile || profile.role !== "student") redirect("/sign-in")
 
   return <>{children}</>
 }

@@ -3,7 +3,7 @@ import type { NextRequest } from "next/server"
 import { createServerClient } from "@supabase/ssr"
 
 export async function middleware(req: NextRequest) {
-  const res = NextResponse.next()
+  let supabaseResponse = NextResponse.next({ request: req }) // ← pass request here
 
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -14,9 +14,13 @@ export async function middleware(req: NextRequest) {
           return req.cookies.getAll()
         },
         setAll(cookiesToSet) {
-          cookiesToSet.forEach(({ name, value, options }) => {
-            res.cookies.set(name, value, options)
-          })
+          cookiesToSet.forEach(({ name, value }) =>
+            req.cookies.set(name, value)
+          )
+          supabaseResponse = NextResponse.next({ request: req })
+          cookiesToSet.forEach(({ name, value, options }) =>
+            supabaseResponse.cookies.set(name, value, options)
+          )
         },
       },
     }
@@ -24,7 +28,7 @@ export async function middleware(req: NextRequest) {
 
   await supabase.auth.getUser()
 
-  return res
+  return supabaseResponse // ← return supabaseResponse, not res
 }
 
 export const config = {
