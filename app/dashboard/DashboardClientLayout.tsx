@@ -135,22 +135,6 @@ export default function DashboardShell({
         ))}
       </nav>
 
-      {/* // Replace the User Profile section at the bottom of SidebarContent with: */}
-      <div className="p-4 border-t border-border">
-        <div className="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-muted transition-colors">
-          <div className="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center">
-            <span className="text-primary font-bold text-sm">
-              {profile?.first_name?.[0]}{profile?.last_name?.[0]}
-            </span>
-          </div>
-          <div className="flex-1 min-w-0">
-            <div className="text-sm font-semibold text-foreground truncate">
-              {profile?.first_name} {profile?.last_name}
-            </div>
-            <div className="text-xs text-muted-foreground capitalize">{profile?.role}</div>
-          </div>
-        </div>
-      </div>
 
       {/* Upgrade Banner */}
       <div className="p-4 border-t border-border">
@@ -171,6 +155,7 @@ export default function DashboardShell({
             className="text-muted-foreground hover:text-destructive transition-colors"
             title="Sign out"
           >
+            Logout
             <LogOut className="w-4 h-4" />
           </button>
         </div>
