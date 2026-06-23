@@ -7,10 +7,9 @@ export async function sendLoginEmail({
   email: string;
   data: {
     email: string;
-    userId: string;
+    studentId: string;
     password: string;
-    loginMethod: string;
-    note?: string;
+    loginUrl: string;
   };
 }) {
   await resend.emails.send({
@@ -21,20 +20,24 @@ export async function sendLoginEmail({
       <div style="font-family: Arial; padding: 20px;">
         <h2>Welcome to Korva Tech Hub 🎓</h2>
 
-        <p>Here are your login details:</p>
+        <p>Your account has been successfully created after payment.</p>
+
+        <p><strong>Login Details:</strong></p>
 
         <ul>
           <li><strong>Email:</strong> ${data.email}</li>
-          <li><strong>User ID:</strong> ${data.userId}</li>
+          <li><strong>Student ID:</strong> ${data.studentId}</li>
           <li><strong>Password:</strong> ${data.password}</li>
-          <li><strong>Login Method:</strong> ${data.loginMethod}</li>
         </ul>
 
-        <p style="margin-top:20px; color: gray;">
-          ${data.note || ""}
+        <p>
+          Login here: 
+          <a href="${data.loginUrl}">${data.loginUrl}</a>
         </p>
 
-        <p>Keep this safe.</p>
+        <p style="margin-top:20px; color: gray;">
+          Please keep these details safe. You will need them to access your dashboard.
+        </p>
       </div>
     `,
   });
