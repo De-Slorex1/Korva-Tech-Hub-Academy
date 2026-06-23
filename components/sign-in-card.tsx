@@ -39,8 +39,10 @@ export function SignInCard() {
     // FORCE SESSION SYNC
     await supabase.auth.getSession()
 
-    router.replace("/dashboard")
-    router.refresh()
+    setTimeout(() => {
+      router.push("/dashboard")
+      router.refresh()
+    }, 250)
 
     // 2. Get profile
     const { data: profile } = await supabase

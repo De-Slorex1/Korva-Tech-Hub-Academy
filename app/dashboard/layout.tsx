@@ -1,18 +1,30 @@
 import { redirect } from "next/navigation"
-import { createSupabaseServer } from "@/lib/supabaseServer"
+import { createServerClient } from "@supabase/ssr"
+import { cookies } from "next/headers"
 
 export default async function DashboardLayout({
   children,
 }: {
   children: React.ReactNode
 }) {
-  const supabase = await createSupabaseServer()
+  const cookieStore = cookies()
+
+  const supabase = createServerClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    {
+      cookies: {
+        getAll: () => cookieStore.getAll(),
+        setAll: () => {},
+      },
+    }
+  )
 
   const {
     data: { user },
   } = await supabase.auth.getUser()
 
-  if (!user) return redirect("/sign-in")
+  if (!user) redirect("/sign-in")
 
   const { data: profile } = await supabase
     .from("profiles")
