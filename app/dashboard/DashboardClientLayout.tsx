@@ -3,6 +3,9 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
+import { createClient } from "@/lib/supabaseClient"
+import { useRouter } from "next/navigation"
+import { LogOut } from "lucide-react"
 import {
   BarChart3,
   BookOpen,
@@ -74,6 +77,14 @@ export default function DashboardShell({
   children: React.ReactNode
   profile: Profile
 }) {
+  const router = useRouter()
+
+  const handleLogout = async () => {
+    const supabase = createClient()
+    await supabase.auth.signOut()
+    router.push("/sign-in")
+  }
+
   const pathname = usePathname()
   const [open, setOpen] = useState(false)
 
@@ -142,16 +153,27 @@ export default function DashboardShell({
       </div>
 
       {/* Upgrade Banner */}
-      <div className="p-4 m-3 bg-gradient-to-r from-primary/20 to-accent/20 rounded-lg border border-primary/30">
-        <div className="text-xs font-semibold text-primary mb-2">
-          Unlock advanced features
+      <div className="p-4 border-t border-border">
+        <div className="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-muted transition-colors">
+          <div className="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center">
+            <span className="text-primary font-bold text-sm">
+              {profile?.first_name?.[0]}{profile?.last_name?.[0]}
+            </span>
+          </div>
+          <div className="flex-1 min-w-0">
+            <div className="text-sm font-semibold text-foreground truncate">
+              {profile?.first_name} {profile?.last_name}
+            </div>
+            <div className="text-xs text-muted-foreground capitalize">{profile?.role}</div>
+          </div>
+          <button
+            onClick={handleLogout}
+            className="text-muted-foreground hover:text-destructive transition-colors"
+            title="Sign out"
+          >
+            <LogOut className="w-4 h-4" />
+          </button>
         </div>
-        <Button
-          size="sm"
-          className="w-full bg-primary hover:bg-primary/90"
-        >
-          Upgrade Plan
-        </Button>
       </div>
     </div>
   )
