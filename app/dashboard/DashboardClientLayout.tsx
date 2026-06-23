@@ -30,7 +30,7 @@ const navigationItems = [
     items: [
       { name: 'Dashboard', href: '/dashboard', icon: BarChart3 },
       { name: 'My Learning', href: '/dashboard/learning', icon: BookOpen },
-      { name: 'Live Classes', href: '/dashboard/classes', icon: Calendar },
+      // { name: 'Live Classes', href: '/dashboard/classes', icon: Calendar },
       { name: 'Assignments', href: '/dashboard/assignments', icon: FileText },
       { name: 'Projects', href: '/dashboard/projects', icon: Briefcase },
     ],
@@ -152,11 +152,11 @@ export default function DashboardShell({
           </div>
           <button
             onClick={handleLogout}
-            className="text-muted-foreground hover:text-destructive transition-colors"
+            className="flex items-center gap-1 text-xs text-muted-foreground hover:text-destructive transition-colors shrink-0"
             title="Sign out"
           >
-            Logout
             <LogOut className="w-4 h-4" />
+            <span>Logout</span>
           </button>
         </div>
       </div>
