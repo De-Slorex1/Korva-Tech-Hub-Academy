@@ -112,6 +112,80 @@ export async function POST(req: Request) {
       })
       .eq("id", enrollment.id);
 
+    // After activating enrollment, create installment schedule if payment_plan is installment
+    if (enrollment.payment_plan === "installment") {
+      const enrollmentDate = new Date()
+      const fullCoursePrice = course.price
+
+      const payment2Amount = Math.round(fullCoursePrice * 0.375)
+      const payment3Amount = fullCoursePrice - Math.round(fullCoursePrice * 0.25) - payment2Amount
+
+      const dueDate2 = new Date(enrollmentDate)
+      dueDate2.setMonth(dueDate2.getMonth() + 1)
+
+      const dueDate3 = new Date(enrollmentDate)
+      dueDate3.setMonth(dueDate3.getMonth() + 2)
+
+      await supabaseAdmin.from("installment_schedule").insert([
+        {
+          enrollment_id: enrollment.id,
+          user_id: enrollment.user_id,
+          installment_number: 2,
+          amount: payment2Amount,
+          due_date: dueDate2.toISOString(),
+          status: "pending",
+        },
+        {
+          enrollment_id: enrollment.id,
+          user_id: enrollment.user_id,
+          installment_number: 3,
+          amount: payment3Amount,
+          due_date: dueDate3.toISOString(),
+          status: "pending",
+        },
+      ])
+    }
+
+    // Check if this is an installment payment
+    const installmentId = body.data?.metadata?.installmentId
+
+    if (installmentId) {
+      // Handle installment payment
+      await supabaseAdmin
+        .from("installment_schedule")
+        .update({
+          status: "paid",
+          paid_at: new Date().toISOString(),
+          payment_reference: reference,
+        })
+        .eq("id", installmentId)
+
+      // Record payment
+      await supabaseAdmin.from("payments").insert({
+        enrollment_id: body.data.metadata.enrollmentId,
+        amount,
+        status: "success",
+        reference,
+      })
+
+      // Check if all installments are paid
+      const { data: remaining } = await supabaseAdmin
+        .from("installment_schedule")
+        .select("id")
+        .eq("enrollment_id", body.data.metadata.enrollmentId)
+        .eq("status", "pending")
+
+      if (!remaining || remaining.length === 0) {
+        await supabaseAdmin
+          .from("enrollments")
+          .update({ payment_status: "success" })
+          .eq("id", body.data.metadata.enrollmentId)
+      }
+
+      console.log("Installment payment processed:", installmentId)
+      return Response.json({ received: true })
+    }
+
     // Payment record
     await supabaseAdmin.from("payments").insert({
       enrollment_id: enrollment.id,
