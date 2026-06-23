@@ -1,147 +1,101 @@
-'use client'
+import { createServerClient } from "@supabase/ssr"
+import { cookies } from "next/headers"
+import { COURSE_CODE_BY_ID } from "@/lib/course-ids"
+import courses from "@/data/courses"
+import LearningClient from "./LearningClient"
 
-import { motion } from 'framer-motion'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
-import { Badge } from '@/components/ui/badge'
-import { mockCourses } from '@/lib/mock-data'
-import { BookOpen, Clock, Users, Award } from 'lucide-react'
 
-const containerVariants = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: { staggerChildren: 0.1 },
-  },
-}
+export default async function LearningPage() {
+  const cookieStore = await cookies()
 
-const itemVariants = {
-  hidden: { opacity: 0, y: 20 },
-  visible: { opacity: 1, y: 0 },
-}
+  const supabase = createServerClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    {
+      cookies: {
+        getAll: () => cookieStore.getAll(),
+        setAll: () => {},
+      },
+    }
+  )
 
-export default function LearningPage() {
+  const { data: { user } } = await supabase.auth.getUser()
+
+  // Fetch enrollments
+  const { data: enrollments } = await supabase
+    .from("enrollments")
+    .select("id, course_id, status, cohort:cohorts(id, name)")
+    .eq("user_id", user!.id)
+    .eq("status", "active")
+
+  // Fetch lesson progress
+  const { data: lessonProgress } = await supabase
+    .from("lesson_progress")
+    .select("*")
+    .eq("user_id", user!.id)
+
+  // Fetch study sessions
+  const { data: studySessions } = await supabase
+    .from("study_sessions")
+    .select("duration_minutes")
+    .eq("user_id", user!.id)
+
+  // Enrich enrollments with static course data
+  const enrichedEnrollments = (enrollments ?? []).map((enrollment) => {
+    const code = COURSE_CODE_BY_ID[enrollment.course_id]
+    const staticCourse = courses.find((c) => c.code === code) ?? null
+
+    // Calculate progress for this course
+    const courseLessons = lessonProgress?.filter(
+      (lp) => lp.course_code === code
+    ) ?? []
+    const completedLessons = courseLessons.filter((lp) => lp.completed).length
+
+    // Total lessons from static data
+    const totalLessons = staticCourse?.curriculum.reduce(
+      (sum, module) => sum + module.lessons.length, 0
+    ) ?? 0
+
+    const progressPercent = totalLessons > 0
+      ? Math.round((completedLessons / totalLessons) * 100)
+      : 0
+
+    return {
+      id: enrollment.id,
+      course_id: enrollment.course_id,
+      status: enrollment.status,
+      cohort: Array.isArray(enrollment.cohort)
+        ? enrollment.cohort[0] ?? null
+        : enrollment.cohort,
+      staticCourse,
+      completedLessons,
+      totalLessons,
+      progressPercent,
+    }
+  })
+
+  // Total study time in hours
+  const totalStudyMinutes = studySessions?.reduce(
+    (sum, s) => sum + s.duration_minutes, 0
+  ) ?? 0
+  const totalStudyHours = Math.round(totalStudyMinutes / 60)
+
+  // Cohort members count (from first active enrollment's cohort)
+  const cohortId = enrollments?.[0]?.cohort
+  const { count: cohortCount } = await supabase
+    .from("enrollments")
+    .select("*", { count: "exact", head: true })
+    .eq("cohort_id", typeof cohortId === "object" && cohortId !== null
+      ? (cohortId as any).id
+      : ""
+    )
+
   return (
-    <motion.div
-      className="space-y-8"
-      variants={containerVariants}
-      initial="hidden"
-      animate="visible"
-    >
-      {/* Header */}
-      <motion.div variants={itemVariants} className="space-y-2">
-        <h1 className="text-3xl md:text-4xl font-bold text-foreground">My Learning</h1>
-        <p className="text-muted-foreground">
-          Track your progress across all courses and modules.
-        </p>
-      </motion.div>
-
-      {/* Stats */}
-      <motion.div variants={itemVariants} className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        {[
-          { label: 'Active Courses', value: '3', icon: BookOpen },
-          { label: 'Study Time', value: '27 hrs', icon: Clock },
-          { label: 'Study Group', value: '24 members', icon: Users },
-          { label: 'Certificates', value: '2 in progress', icon: Award },
-        ].map((stat, idx) => {
-          const Icon = stat.icon
-          return (
-            <Card key={idx} className="bg-card border-border">
-              <CardContent className="pt-6">
-                <Icon className="w-5 h-5 text-accent mb-2" />
-                <p className="text-xs text-muted-foreground mb-1">{stat.label}</p>
-                <p className="text-2xl font-bold text-foreground">{stat.value}</p>
-              </CardContent>
-            </Card>
-          )
-        })}
-      </motion.div>
-
-      {/* Courses Grid */}
-      <motion.div variants={itemVariants}>
-        <h2 className="text-xl font-bold text-foreground mb-4">All Courses</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {mockCourses.map((course) => (
-            <Card key={course.id} className="bg-card border-border hover:border-primary/50 transition-colors">
-              <CardContent className="p-6">
-                <Badge className="bg-accent/20 text-accent mb-3">
-                  {course.status}
-                </Badge>
-                <h3 className="text-lg font-bold text-foreground mb-2">
-                  {course.title}
-                </h3>
-                <p className="text-sm text-muted-foreground mb-4 line-clamp-2">
-                  {course.description}
-                </p>
-
-                <div className="mb-4">
-                  <div className="flex justify-between mb-2">
-                    <span className="text-xs text-muted-foreground">
-                      {course.completedLessons}/{course.lessons} lessons
-                    </span>
-                    <span className="text-xs font-semibold text-accent">
-                      {course.progress}%
-                    </span>
-                  </div>
-                  <div className="w-full h-2 bg-muted rounded-full overflow-hidden">
-                    <div
-                      className="h-full bg-gradient-to-r from-accent to-accent/70"
-                      style={{ width: `${course.progress}%` }}
-                    />
-                  </div>
-                </div>
-
-                <Button className="w-full" variant="outline">
-                  Continue Lesson
-                </Button>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
-      </motion.div>
-
-      {/* Course Modules */}
-      <motion.div variants={itemVariants}>
-        <h2 className="text-xl font-bold text-foreground mb-4">Featured Course Modules</h2>
-        <Card className="bg-card border-border">
-          <CardHeader>
-            <CardTitle className="text-foreground">
-              {mockCourses[0].title}
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-3">
-              {[
-                { title: 'Microservices Architecture', duration: '2.5 hrs', status: 'completed' },
-                { title: 'API Gateway Patterns', duration: '2 hrs', status: 'in-progress' },
-                { title: 'Distributed Databases', duration: '3 hrs', status: 'locked' },
-                { title: 'Cloud Deployment', duration: '2.5 hrs', status: 'locked' },
-              ].map((module, idx) => (
-                <div
-                  key={idx}
-                  className="flex items-center justify-between p-3 bg-muted rounded-lg"
-                >
-                  <div>
-                    <p className="text-sm font-medium text-foreground">{module.title}</p>
-                    <p className="text-xs text-muted-foreground">{module.duration}</p>
-                  </div>
-                  <Badge
-                    className={`${
-                      module.status === 'completed'
-                        ? 'bg-accent/20 text-accent'
-                        : module.status === 'in-progress'
-                        ? 'bg-primary/20 text-primary'
-                        : 'bg-muted text-muted-foreground'
-                    }`}
-                  >
-                    {module.status}
-                  </Badge>
-                </div>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
-      </motion.div>
-    </motion.div>
+    <LearningClient
+      enrollments={enrichedEnrollments}
+      totalStudyHours={totalStudyHours}
+      cohortMemberCount={cohortCount ?? 0}
+      userId={user!.id}
+    />
   )
 }
