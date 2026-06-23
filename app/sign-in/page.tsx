@@ -19,10 +19,10 @@ export default function SignInPage() {
       <div className="relative z-10">
         <SiteHeader />
 
-        <main className="mx-auto grid max-w-6xl grid-cols-1 items-center gap-16 px-6 py-20 lg:grid-cols-2">
+       <main className="mx-auto flex min-h-[calc(100vh-80px)] items-center justify-center px-6 py-10 lg:grid lg:max-w-6xl lg:grid-cols-2 lg:gap-16 lg:py-20">
 
           {/* LEFT SIDE - HERO */}
-          <div className="space-y-8">
+          <div className="hidden space-y-8 lg:block">
             <div>
               <p className="text-xs tracking-[0.35em] text-white/40">
                 KORVA TECH HUB ACCESS

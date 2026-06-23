@@ -25,6 +25,7 @@ const portalItems = ["Student", "Instructor", "Admin"]
 
 export function SiteHeader() {
   const [mobileOpen, setMobileOpen] = useState(false)
+  const [portalOpen, setPortalOpen] = useState(false)
 
   const pathname = usePathname()
   const router = useRouter()
@@ -167,39 +168,56 @@ export function SiteHeader() {
         </div>
 
         <nav className="mt-8 flex flex-col gap-3 px-6">
+          {navLinks.map((link) =>
+            link.dropdown ? (
+              <div key={link.label}>
+                <button
+                  onClick={() => setPortalOpen(!portalOpen)}
+                  className="flex w-full items-center justify-between rounded-xl px-5 py-4 text-left text-lg text-neutral-300 hover:bg-neutral-800"
+                >
+                  {link.label}
+                  <ChevronDown
+                    className={`h-5 w-5 transition-transform ${
+                      portalOpen ? "rotate-180" : ""
+                    }`}
+                  />
+                </button>
 
-          {navLinks.map((link) => (
-            <button
-              key={link.label}
-              onClick={() => {
-                setMobileOpen(false)
-
-                if (link.href !== "#") {
+                {portalOpen && (
+                  <div className="ml-4 mt-2 flex flex-col gap-2">
+                    {portalItems.map((item) => (
+                      <button
+                        key={item}
+                        onClick={() => {
+                          setMobileOpen(false)
+                          router.push("/sign-in")
+                        }}
+                        className="rounded-lg bg-neutral-900 px-4 py-3 text-left text-neutral-300 hover:bg-neutral-800"
+                      >
+                        {item}
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
+            ) : (
+              <button
+                key={link.label}
+                onClick={() => {
+                  setMobileOpen(false)
                   router.push(link.href)
-                }
-              }}
-              className={`rounded-xl px-5 py-4 text-left text-lg transition ${
-                isActive(link.href)
-                  ? "bg-violet-600 text-white"
-                  : "text-neutral-300 hover:bg-neutral-800"
-              }`}
-            >
-              {link.label}
-            </button>
-          ))}
-
-          <button
-            onClick={() => {
-              setMobileOpen(false)
-              router.push("/enrollment")
-            }}
-            className="mt-8 rounded-xl bg-violet-600 py-4 text-lg font-semibold text-white transition hover:bg-violet-700"
-          >
-            Enroll Now
-          </button>
-
+                }}
+                className={`rounded-xl px-5 py-4 text-left text-lg transition ${
+                  isActive(link.href)
+                    ? "bg-violet-600 text-white"
+                    : "text-neutral-300 hover:bg-neutral-800"
+                }`}
+              >
+                {link.label}
+              </button>
+            )
+          )}
         </nav>
-
       </div>
     </>
   )

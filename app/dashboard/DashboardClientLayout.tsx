@@ -155,7 +155,7 @@ export default function DashboardShell({
             className="flex items-center gap-1 text-xs text-muted-foreground hover:text-destructive transition-colors shrink-0"
             title="Sign out"
           >
-            <LogOut className="w-4 h-4 text-red-800" />
+            <LogOut className="w-6 h-6 text-red-800" />
           </button>
         </div>
       </div>
@@ -173,14 +173,27 @@ export default function DashboardShell({
       <Sheet open={open} onOpenChange={setOpen}>
         <SheetTrigger asChild className="lg:hidden">
           <Button
-            variant="ghost"
+            variant="default"
             size="icon"
-            className="fixed top-4 left-4 z-40"
+            className="
+              fixed
+              top-4
+              left-4
+              z-50
+              h-12
+              w-12
+              rounded-full
+              bg-violet-600
+              text-white
+              shadow-lg
+              hover:bg-violet-700
+              lg:hidden
+            "
           >
             {open ? (
-              <X className="w-5 h-5" />
+              <X className="h-6 w-6" />
             ) : (
-              <Menu className="w-5 h-5" />
+              <Menu className="h-6 w-6" />
             )}
           </Button>
         </SheetTrigger>
