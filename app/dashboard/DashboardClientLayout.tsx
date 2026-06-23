@@ -155,8 +155,8 @@ export default function DashboardShell({
             className="flex items-center gap-1 text-xs text-muted-foreground hover:text-destructive transition-colors shrink-0"
             title="Sign out"
           >
-            <LogOut className="w-4 h-4" />
-            <span>Logout</span>
+            <LogOut className="w-4 h-4 text-red-800" />
+            <span className='text-red-800'>Logout</span>
           </button>
         </div>
       </div>
