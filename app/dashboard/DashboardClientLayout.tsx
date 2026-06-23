@@ -53,7 +53,7 @@ const navigationItems = [
 //     ],
 //   },
   {
-    label: 'OTHERS',
+    // label: 'OTHERS',
     items: [
       // { name: 'Certificates', href: '/dashboard/certificates', icon: FileText },
       // { name: 'Billing', href: '/dashboard/billing', icon: CreditCard },
