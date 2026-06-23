@@ -26,7 +26,7 @@ export function SignInCard() {
 
     // 1. Sign in
     const { data, error } = await supabase.auth.signInWithPassword({
-      email: form.get("email") as string,
+      email,
       password,
     })
 
@@ -35,6 +35,12 @@ export function SignInCard() {
       alert(error.message)
       return
     }
+
+    // FORCE SESSION SYNC
+    await supabase.auth.getSession()
+
+    router.replace("/dashboard")
+    router.refresh()
 
     // 2. Get profile
     const { data: profile } = await supabase
