@@ -156,7 +156,6 @@ export default function PaymentSuccessPage() {
             Proceed to Dashboard
           </button>
         </div>
-
       </div>
     </div>
   );

@@ -1,8 +1,7 @@
 import { redirect } from "next/navigation"
 import { createServerClient } from "@supabase/ssr"
 import { cookies } from "next/headers"
-import DashboarShell from "./DashboardClientLayout"
-
+import DashboardShell from "./DashboardClientLayout"
 
 export default async function DashboardLayout({
   children,
@@ -17,7 +16,11 @@ export default async function DashboardLayout({
     {
       cookies: {
         getAll: () => cookieStore.getAll(),
-        setAll: () => {},
+        setAll: (cookiesToSet) => {
+          cookiesToSet.forEach(({ name, value, options }) =>
+            cookieStore.set(name, value, options)
+          )
+        },
       },
     }
   )
@@ -31,9 +34,11 @@ export default async function DashboardLayout({
     .eq("user_id", user.id)
     .single()
 
+  console.log("profile result:", profile)
+
   return (
-    <DashboarShell profile={profile}>
+    <DashboardShell profile={profile}>
       {children}
-    </DashboarShell>
+    </DashboardShell>
   )
 }
