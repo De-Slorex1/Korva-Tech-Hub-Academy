@@ -1,5 +1,5 @@
-import { cookies } from "next/headers"
 import { createServerClient } from "@supabase/ssr"
+import { cookies } from "next/headers"
 
 export function createSupabaseServer() {
   const cookieStore = cookies()
@@ -9,13 +9,10 @@ export function createSupabaseServer() {
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
     {
       cookies: {
-        getAll() {
-          return cookieStore.getAll()
-        },
-        setAll(cookiesToSet) {
-          cookiesToSet.forEach(({ name, value, options }) => {
-            cookieStore.set(name, value, options)
-          })
+        getAll: () => cookieStore.getAll(),
+        setAll: () => {
+          // 🚨 IMPORTANT: do NOT implement manually here in layouts
+          // Supabase handles this internally in server components
         },
       },
     }

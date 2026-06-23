@@ -40,9 +40,9 @@ export async function middleware(req: NextRequest) {
 
   const isDashboard = req.nextUrl.pathname.startsWith("/dashboard")
 
-  if (isDashboard && !user) {
-    return NextResponse.redirect(new URL("/sign-in", req.url))
-  }
+  // if (isDashboard && !user) {
+  //   return NextResponse.redirect(new URL("/sign-in", req.url))
+  // }
 
   return res
 }
