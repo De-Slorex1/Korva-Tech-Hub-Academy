@@ -1,6 +1,7 @@
 import { createServerClient } from "@supabase/ssr"
 import { cookies } from "next/headers"
 import { redirect } from "next/navigation"
+import { supabaseAdmin } from "@/lib/supabaseAdmin"
 import SettingsClient from "./SettingsClient"
 
 export default async function SettingsPage() {
@@ -20,7 +21,7 @@ export default async function SettingsPage() {
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) redirect("/sign-in")
 
-  const { data: profile } = await supabase
+  const { data: profile } = await supabaseAdmin
     .from("profiles")
     .select("first_name, last_name, email, phone, country, student_id, role")
     .eq("user_id", user.id)

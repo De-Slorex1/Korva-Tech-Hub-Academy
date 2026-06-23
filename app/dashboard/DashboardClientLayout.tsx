@@ -156,7 +156,6 @@ export default function DashboardShell({
             title="Sign out"
           >
             <LogOut className="w-4 h-4 text-red-800" />
-            <span className='text-red-800'>Logout</span>
           </button>
         </div>
       </div>
