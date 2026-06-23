@@ -146,10 +146,10 @@ export default function PaymentSuccessPage() {
         {/* BUTTONS */}
         <div className="mt-10 flex flex-col md:flex-row gap-4 justify-center">
           <button
-            onClick={handleDownloadReceipt}
+            onClick={() => router.push("https://wa.me/2349052639990?text=Hello%20Korva%20Tech%20Hub,%20I%20would%20like%20to%20join%20my%20an%20cohort.")}
             className="px-6 py-3 rounded-xl bg-violet-600 hover:bg-violet-500 transition flex items-center justify-center gap-2"
             >
-            Join Group Chat
+            Request Access to Group
           </button>
 
           <button onClick={() => {router.push("/sign-in")}} className="px-6 py-3 rounded-xl border border-white/10 hover:bg-white/5 transition">
