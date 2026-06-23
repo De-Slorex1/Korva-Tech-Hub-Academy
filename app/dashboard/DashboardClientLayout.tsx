@@ -56,8 +56,8 @@ const navigationItems = [
     // label: 'OTHERS',
     items: [
       // { name: 'Certificates', href: '/dashboard/certificates', icon: FileText },
-      // { name: 'Billing', href: '/dashboard/billing', icon: CreditCard },
-      // { name: 'Settings', href: '/dashboard/settings', icon: Settings },
+      { name: 'Billing', href: '/dashboard/billing', icon: CreditCard },
+      { name: 'Settings', href: '/dashboard/settings', icon: Settings },
     ],
   },
 ]

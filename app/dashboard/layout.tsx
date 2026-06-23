@@ -1,6 +1,7 @@
 import { redirect } from "next/navigation"
 import { createServerClient } from "@supabase/ssr"
 import { cookies } from "next/headers"
+import { supabaseAdmin } from "@/lib/supabaseAdmin"
 import DashboardShell from "./DashboardClientLayout"
 
 export default async function DashboardLayout({
@@ -28,7 +29,8 @@ export default async function DashboardLayout({
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) redirect("/sign-in")
 
-  const { data: profile } = await supabase
+  // Use admin client to bypass RLS for profile fetch
+  const { data: profile } = await supabaseAdmin
     .from("profiles")
     .select("first_name, last_name, role, student_id, email")
     .eq("user_id", user.id)
