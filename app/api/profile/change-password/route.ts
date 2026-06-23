@@ -1,9 +1,8 @@
 import { createServerClient } from "@supabase/ssr"
 import { cookies } from "next/headers"
-import { redirect } from "next/navigation"
-import SettingsClient from "./SettingsClient"
+import { NextResponse } from "next/server"
 
-export default async function SettingsPage() {
+export async function POST(req: Request) {
   const cookieStore = await cookies()
 
   const supabase = createServerClient(
@@ -18,13 +17,13 @@ export default async function SettingsPage() {
   )
 
   const { data: { user } } = await supabase.auth.getUser()
-  if (!user) redirect("/sign-in")
+  if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
 
-  const { data: profile } = await supabase
-    .from("profiles")
-    .select("first_name, last_name, email, phone, country, student_id, role")
-    .eq("user_id", user.id)
-    .single()
+  const { newPassword } = await req.json()
 
-  return <SettingsClient profile={profile} userId={user.id} />
+  const { error } = await supabase.auth.updateUser({ password: newPassword })
+
+  if (error) return NextResponse.json({ error: error.message }, { status: 500 })
+
+  return NextResponse.json({ success: true })
 }
