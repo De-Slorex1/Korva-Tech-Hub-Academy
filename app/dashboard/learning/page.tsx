@@ -3,6 +3,7 @@ import { cookies } from "next/headers"
 import { COURSE_CODE_BY_ID } from "@/lib/course-ids"
 import courses from "@/data/courses"
 import LearningClient from "./LearningClient"
+import { redirect } from "next/navigation" 
 
 
 export default async function LearningPage() {
@@ -20,6 +21,12 @@ export default async function LearningPage() {
   )
 
   const { data: { user } } = await supabase.auth.getUser()
+
+  // DELETE these lines from LearningClient.ts
+
+  if (!user) {
+    redirect("/sign-in")
+  }
 
   // Fetch enrollments
   const { data: enrollments } = await supabase
