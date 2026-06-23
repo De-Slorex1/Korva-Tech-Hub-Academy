@@ -3,6 +3,7 @@ import { createServerClient } from "@supabase/ssr"
 import { cookies } from "next/headers"
 import DashboarShell from "./DashboardClientLayout"
 
+
 export default async function DashboardLayout({
   children,
 }: {
@@ -24,6 +25,15 @@ export default async function DashboardLayout({
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) redirect("/sign-in")
 
-  // No role restriction for now — just check they're logged in
-  return <DashboarShell>{children}</DashboarShell>
+  const { data: profile } = await supabase
+    .from("profiles")
+    .select("first_name, last_name, role, student_id, email")
+    .eq("user_id", user.id)
+    .single()
+
+  return (
+    <DashboarShell profile={profile}>
+      {children}
+    </DashboarShell>
+  )
 }

@@ -5,3 +5,8 @@ export const COURSE_IDS = {
   fsa: "b9970da6-5487-4851-8805-b7e38840bc88",
   dia: "bf90284a-976f-4f8f-bc88-d0110a959b67",
 }
+
+// Reverse lookup: course_id → code
+export const COURSE_CODE_BY_ID: Record<string, string> = Object.fromEntries(
+  Object.entries(COURSE_IDS).map(([code, id]) => [id, code])
+)

@@ -32,15 +32,15 @@ const navigationItems = [
       { name: 'Projects', href: '/dashboard/projects', icon: Briefcase },
     ],
   },
-  {
-    label: 'COMMUNITY',
-    items: [
-      { name: 'Community', href: '/dashboard/community', icon: Users },
-      { name: 'Mentor Support', href: '/dashboard/mentor', icon: MessageSquare },
-      { name: 'Messages', href: '/dashboard/messages', icon: MessageSquare },
-      { name: 'Announcements', href: '/dashboard/announcements', icon: Calendar },
-    ],
-  },
+  // {
+  //   label: 'COMMUNITY',
+  //   items: [
+  //     { name: 'Community', href: '/dashboard/community', icon: Users },
+  //     { name: 'Mentor Support', href: '/dashboard/mentor', icon: MessageSquare },
+  //     { name: 'Messages', href: '/dashboard/messages', icon: MessageSquare },
+  //     { name: 'Announcements', href: '/dashboard/announcements', icon: Calendar },
+  //   ],
+  // },
 //   {
 //     label: 'CAREER',
 //     items: [
@@ -59,10 +59,20 @@ const navigationItems = [
   },
 ]
 
-export default function DashboarShell({
+type Profile = {
+  first_name: string
+  last_name: string
+  role: string
+  student_id: string | null
+  email: string
+} | null
+
+export default function DashboardShell({
   children,
+  profile,
 }: {
   children: React.ReactNode
+  profile: Profile
 }) {
   const pathname = usePathname()
   const [open, setOpen] = useState(false)
@@ -114,24 +124,21 @@ export default function DashboarShell({
         ))}
       </nav>
 
-      {/* User Profile */}
+      // Replace the User Profile section at the bottom of SidebarContent with:
       <div className="p-4 border-t border-border">
-        <Link
-          href="/dashboard/settings"
-          className="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-muted transition-colors"
-        >
-          <img
-            src={mockUser.avatar}
-            alt={mockUser.name}
-            className="w-10 h-10 rounded-full"
-          />
+        <div className="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-muted transition-colors">
+          <div className="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center">
+            <span className="text-primary font-bold text-sm">
+              {profile?.first_name?.[0]}{profile?.last_name?.[0]}
+            </span>
+          </div>
           <div className="flex-1 min-w-0">
             <div className="text-sm font-semibold text-foreground truncate">
-              {mockUser.name}
+              {profile?.first_name} {profile?.last_name}
             </div>
-            <div className="text-xs text-muted-foreground">{mockUser.role}</div>
+            <div className="text-xs text-muted-foreground capitalize">{profile?.role}</div>
           </div>
-        </Link>
+        </div>
       </div>
 
       {/* Upgrade Banner */}
