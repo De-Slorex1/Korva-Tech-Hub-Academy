@@ -1665,7 +1665,7 @@ const courses = [
     description:
         "Master data science, machine learning, statistics, data engineering workflows, and AI-powered analytics. Learn how to collect, prepare, analyze, model, evaluate, and deploy machine learning solutions using industry-standard tools and real-world datasets.",
 
-    image: "/data-science.png",
+    image: "/dsm.png",
     previewVideo: "/data-science-preview.mp4",
 
     duration: "6 Months",
@@ -2064,7 +2064,7 @@ const courses = [
 
     lifetimeAccess: true,
 
-    mentors: ["/uiux.png"]
+    mentors: ["/dsm.png"]
     },
     {
 level: 2,
