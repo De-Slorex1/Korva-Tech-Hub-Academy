@@ -38,10 +38,10 @@ export async function POST(req: Request) {
     }
 
     // 2. Calculate amount early (NO second fetch later)
-    let amount = course.price;
+    let amount = course.price
 
     if (paymentPlan === "installment") {
-      amount = course.price / 2;
+      amount = Math.round(course.price * 0.25) // ← 25% deposit to match UI
     }
 
     if (paymentPlan === "scholarship") {

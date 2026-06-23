@@ -41,6 +41,18 @@ export function ReviewStep({
       ? selectedCourse?.price.installment.discounted
       : selectedCourse?.price.fullPayment.discounted
 
+  const getDisplayAmount = () => {
+  if (data.paymentPlan === "scholarship") return "Pending Review"
+  if (data.paymentPlan === "installment") {
+    const fullPrice = Number(
+      selectedCourse?.price.fullPayment.discounted?.replace(/[₦,]/g, "") || 0
+    )
+    const deposit = Math.round(fullPrice * 0.25)
+    return `₦${deposit.toLocaleString()} (25% deposit)`
+  }
+  return selectedCourse?.price.fullPayment.discounted
+}
+
   const handleProceed = async () => {
   try {
     setLoading(true);
@@ -195,8 +207,8 @@ export function ReviewStep({
             </div>
 
             <div className="text-right">
-              <p className="text-xs text-white/50">
-                Amount
+              <p className="text-xl font-bold text-violet-300">
+                {getDisplayAmount()}
               </p>
 
               <p className="text-xl font-bold text-violet-300">

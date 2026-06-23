@@ -163,7 +163,7 @@ export async function POST(req: Request) {
         program: course.name,
         duration: course.duration,
         startDate: enrollment.start_date,
-        amount: course.price || amount,
+        amount: amount,
         amountWords: `${numberToWords(
           course.price || amount
         )} Naira Only`,
