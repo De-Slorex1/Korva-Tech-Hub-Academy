@@ -3,7 +3,7 @@ import Image from "next/image"
 const team = [
   {
     name: "Jacob Samson Aina",
-    role: "Founder & CEO",
+    role: "Software Developer Instructor",
     image: "/image.jpg",
     bio: "Passionate about creating practical and accessible tech education opportunities for aspiring professionals.",
   },
