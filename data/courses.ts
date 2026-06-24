@@ -1326,7 +1326,7 @@ const courses = [
     curriculum: [
 
         {
-        title: "Module 1: Foundations of Data Intelligence",
+        title: "Module 1: Foundations of Data Analysis",
         duration: "2 Weeks",
         lessons: [
             "Introduction to Data",
@@ -1459,7 +1459,7 @@ const courses = [
         },
 
         {
-        title: "Module 9: AI-Powered Data Intelligence",
+        title: "Module 9: AI-Powered Data Analysis",
         duration: "4 Weeks",
         lessons: [
             "Introduction to AI in Analytics",
