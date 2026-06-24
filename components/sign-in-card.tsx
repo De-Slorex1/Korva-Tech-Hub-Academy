@@ -85,10 +85,10 @@ export function SignInCard() {
 
         {/* password */}
         <div className="space-y-2">
-          <div className="flex justify-between">
+          {/* <div className="flex justify-between">
             <Label className="text-white/70">Password</Label>
             <a className="text-xs text-emerald-400">Forgot?</a>
-          </div>
+          </div> */}
 
           <div className="relative">
             <Lock className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-white/40" />

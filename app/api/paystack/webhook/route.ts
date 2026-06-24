@@ -192,7 +192,8 @@ export async function POST(req: Request) {
       amount,
       status: "success",
       reference,
-    });
+      paid_at: new Date().toISOString(), // ← add this
+    })
 
     // Save student ID and temp password
     await supabaseAdmin
