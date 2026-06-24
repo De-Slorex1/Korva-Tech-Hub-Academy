@@ -12,7 +12,6 @@ export async function POST(req: Request) {
       phone,
       country,
       courseId,
-      cohortId,
       paymentPlan,
     } = body;
 
@@ -98,6 +97,16 @@ export async function POST(req: Request) {
         { status: 400 }
       )
     }
+
+    // Find active cohort for this course
+    const { data: activeCohort } = await supabaseAdmin
+      .from("cohorts")
+      .select("id")
+      .eq("course_id", courseId)
+      .eq("is_active", true)
+      .single()
+
+    const cohortId = activeCohort?.id ?? null
 
     // 4. Create profile + enrollment IN PARALLEL
     const enrollmentPromise = supabaseAdmin

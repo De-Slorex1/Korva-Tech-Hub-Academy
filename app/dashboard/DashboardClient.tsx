@@ -62,7 +62,7 @@ export default function DashboardClient({ profile, enrollments, totalPaid }: Pro
       animate="visible"
     >
       {/* Header */}
-      <motion.div variants={itemVariants} className="space-y-2">
+      <motion.div variants={itemVariants} className="space-y-6">
         <h1 className="text-3xl md:text-4xl font-bold text-foreground">
           Good Morning, {firstName}! 👋
         </h1>
