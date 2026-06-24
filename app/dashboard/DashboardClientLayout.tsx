@@ -32,7 +32,7 @@ const navigationItems = [
       { name: 'My Learning', href: '/dashboard/learning', icon: BookOpen },
       // { name: 'Live Classes', href: '/dashboard/classes', icon: Calendar },
       { name: 'Assignments', href: '/dashboard/assignments', icon: FileText },
-      { name: 'Projects', href: '/dashboard/projects', icon: Briefcase },
+      // { name: 'Projects', href: '/dashboard/projects', icon: Briefcase },
     ],
   },
   // {
