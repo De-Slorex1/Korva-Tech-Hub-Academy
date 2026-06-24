@@ -68,7 +68,7 @@ export function SignInCard() {
   }
 
   return (
-    <div className="relative w-full max-w-sm overflow-hidden rounded-3xl border border-white/10 bg-white/[0.03] p-8 backdrop-blur-2xl shadow-[0_0_80px_rgba(139,92,246,0.15)]">
+    <div className="relative w-full max-w-lg overflow-hidden rounded-3xl border border-white/10 bg-white/[0.03] p-8 backdrop-blur-2xl shadow-[0_0_80px_rgba(139,92,246,0.15)]">
 
       <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-emerald-500/10 via-transparent to-purple-500/10" />
 
