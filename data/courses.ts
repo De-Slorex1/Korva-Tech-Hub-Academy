@@ -1234,7 +1234,7 @@ const courses = [
     level: 5,
     code: "dia",
 
-    title: "Data Intelligence with AI",
+    title: "Data Analysis",
     tagline: "Turn data into decisions using AI",
 
     description:
