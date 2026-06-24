@@ -51,21 +51,53 @@ export async function POST(req: Request) {
       });
     }
 
-    // 3. Create user (ONLY ONE auth call)
+    // 3. Create or get existing user
+    let userId: string
+
     const { data: newUser, error: createError } =
       await supabaseAdmin.auth.admin.createUser({
         email,
         email_confirm: true,
-      });
+      })
 
     if (createError) {
-      return NextResponse.json(
-        { error: createError.message },
-        { status: 400 }
-      );
+      // User already exists — find them
+      if (createError.message.includes("already been registered") || 
+          createError.status === 422) {
+        const { data: existingUsers } = await supabaseAdmin.auth.admin.listUsers()
+        const existingUser = existingUsers.users.find((u) => u.email === email)
+        
+        if (!existingUser) {
+          return NextResponse.json(
+            { error: "User lookup failed" },
+            { status: 400 }
+          )
+        }
+        userId = existingUser.id
+      } else {
+        return NextResponse.json(
+          { error: createError.message },
+          { status: 400 }
+        )
+      }
+    } else {
+      userId = newUser.user.id
     }
 
-    const userId = newUser.user.id;
+    // Check for existing active enrollment
+    const { data: existingEnrollment } = await supabaseAdmin
+      .from("enrollments")
+      .select("id, status")
+      .eq("user_id", userId)
+      .eq("course_id", courseId)
+      .single()
+
+    if (existingEnrollment) {
+      return NextResponse.json(
+        { error: "You are already enrolled in this course." },
+        { status: 400 }
+      )
+    }
 
     // 4. Create profile + enrollment IN PARALLEL
     const enrollmentPromise = supabaseAdmin
