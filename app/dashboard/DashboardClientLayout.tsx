@@ -31,8 +31,8 @@ const navigationItems = [
       { name: 'Dashboard', href: '/dashboard', icon: BarChart3 },
       { name: 'My Learning', href: '/dashboard/learning', icon: BookOpen },
       // { name: 'Live Classes', href: '/dashboard/classes', icon: Calendar },
-      // { name: 'Assignments', href: '/dashboard/assignments', icon: FileText },
-      // { name: 'Projects', href: '/dashboard/projects', icon: Briefcase },
+      { name: 'Assignments', href: '/dashboard/assignments', icon: FileText },
+      { name: 'Projects', href: '/dashboard/projects', icon: Briefcase },
     ],
   },
   // {
@@ -53,9 +53,9 @@ const navigationItems = [
 //     ],
 //   },
   {
-    // label: 'OTHERS',
+    label: 'OTHERS',
     items: [
-      // { name: 'Certificates', href: '/dashboard/certificates', icon: FileText },
+      { name: 'Certificates', href: '/dashboard/certificates', icon: FileText },
       { name: 'Billing', href: '/dashboard/billing', icon: CreditCard },
       { name: 'Settings', href: '/dashboard/settings', icon: Settings },
     ],
