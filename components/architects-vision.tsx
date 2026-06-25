@@ -2,18 +2,23 @@ import Image from "next/image"
 
 const team = [
   {
-    name: "Jacob Samson Aina",
+    name: "Mr. Jacob Samson",
     role: "Software Developer Instructor",
     image: "/image.jpg",
     bio: "Passionate about creating practical and accessible tech education opportunities for aspiring professionals.",
   },
   {
-    name: "Adebayo Mojisola Celina",
-    role: "CFO/Social Media Manager",
+    name: "Ms. Adebayo Mojisola",
+    role: "Social Media Manager",
     image: "/moji.jpeg",
     bio: "Guiding learners through real-world software engineering and modern development practices.",
   },
-  
+   {
+    name: "Mr. Ridwan Yusuf",
+    role: "Data Scientist",
+    image: "/ridwan.jpeg",
+    bio: "Guiding learners through real-world software engineering and modern development practices.",
+  },
 ]
 
 export function KorvaLeadership() {
