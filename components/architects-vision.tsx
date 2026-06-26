@@ -15,7 +15,7 @@ const team = [
   },
    {
     name: "Mr. Ridwan Yusuf",
-    role: "Data Scientist",
+    role: "Data Scientist Instructor",
     image: "/ridwan.jpeg",
     bio: "Guiding learners through real-world software engineering and modern development practices.",
   },
