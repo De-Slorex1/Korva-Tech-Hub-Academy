@@ -1,7 +1,6 @@
 import { NextResponse } from "next/server"
 import { supabaseAdmin } from "@/lib/supabaseAdmin"
-import { resend } from "@/lib/resend"
-import { surveyEmailTemplate } from "@/lib/surveyEmailTemplate"
+import { sendSurveyEmail } from "@/lib/sendSurveyEmail"
 
 export async function POST(req: Request) {
   try {
@@ -47,11 +46,9 @@ export async function POST(req: Request) {
     }
 
     // Send personalized email
-    await resend.emails.send({
-      from: "Korva Tech Hub <noreply@korvatechhub.com>",
-      to: email,
-      subject: "About Your Tech Career Assessment",
-      html: surveyEmailTemplate({ fullName, goal, biggestChallenge }),
+    await sendSurveyEmail({
+      email,
+      data: { fullName, goal, biggestChallenge },
     })
 
     return NextResponse.json({ success: true })
