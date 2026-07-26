@@ -19,7 +19,7 @@ export default function SignInPage() {
       <div className="relative z-10">
         <SiteHeader />
 
-       <main className="mx-auto flex min-h-[calc(100vh-80px)] items-center justify-center px-6 py-10 lg:grid lg:max-w-6xl lg:grid-cols-2 lg:gap-16 lg:py-20">
+       <main className="mx-auto flex min-h-[calc(100vh-80px)] items-center justify-center px-4 py-10 lg:grid lg:max-w-6xl lg:grid-cols-2 lg:gap-16 lg:py-20">
 
           {/* LEFT SIDE - HERO */}
           <div className="hidden space-y-8 lg:block">
@@ -68,7 +68,7 @@ export default function SignInPage() {
           </div>
 
           {/* RIGHT SIDE */}
-          <div className="flex flex-col items-center gap-10">
+          <div className="w-full flex flex-col items-center gap-10">
             <SignInCard />
           </div>
 
