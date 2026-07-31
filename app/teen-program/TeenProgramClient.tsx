@@ -195,7 +195,7 @@ export default function TeenProgramClient() {
           </h1>
 
           <p className="text-lg md:text-xl text-white/60 max-w-2xl mx-auto mb-4">
-            In just 6 weeks, your child aged 11–17 will learn to build software, use AI tools, and create real digital projects — all from home.
+            In just 6 weeks, your child aged 11–17 will learn to build software, use AI tools, and create real digital projects, all from home.
           </p>
 
           <p className="text-base text-white/40 max-w-xl mx-auto mb-10">
