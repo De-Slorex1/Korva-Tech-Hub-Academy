@@ -26,5 +26,5 @@ export async function GET() {
     .eq("user_id", user.id)
     .single()
 
-  return NextResponse.json({ role: profile?.role ?? "student" })
+  return NextResponse.json({ role: profile?.role ?? "instructor" })
 }
