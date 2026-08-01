@@ -30,15 +30,13 @@ export function SignInCard() {
       return
     }
 
-    const { data: profile } = await supabase
-      .from("profiles")
-      .select("role")
-      .eq("user_id", data.user.id)
-      .single()
+    // Get role from server API (uses supabaseAdmin to bypass RLS)
+    const res = await fetch("/api/auth/role")
+    const { role } = await res.json()
 
-    if (profile?.role === "admin") {
+    if (role === "admin") {
       router.push("/admin")
-    } else if (profile?.role === "instructor") {
+    } else if (role === "instructor") {
       router.push("/instructor")
     } else {
       router.push("/dashboard")
