@@ -146,6 +146,10 @@ const faqs = [
     question: "Can I get a refund?",
     answer: "Refunds are available within 48 hours of registration if the program has not yet started. Please contact support@korvatechhub.com for assistance.",
   },
+  {
+    question: "Does the learning end after 6 weeks?",
+    answer: "No. The first 6 weeks are an intensive holiday bootcamp held four days each week. After that, students continue with live weekend classes for the next 3 months, where they build more projects, strengthen what they've learned, receive mentorship, and prepare for more advanced topics.",
+  },
 ]
 
 export default function TeenProgramClient() {
@@ -195,7 +199,7 @@ export default function TeenProgramClient() {
           </h1>
 
           <p className="text-lg md:text-xl text-white/60 max-w-2xl mx-auto mb-4">
-            In just 6 weeks, your child aged 11–17 will learn to build software, use AI tools, and create real digital projects, all from home.
+           Your child will complete an intensive 6-week holiday bootcamp, then continue with guided weekend classes for the next 3 months to reinforce their skills, build more projects, and receive ongoing mentorship.
           </p>
 
           <p className="text-base text-white/40 max-w-xl mx-auto mb-10">
@@ -400,6 +404,7 @@ export default function TeenProgramClient() {
               { icon: "🏆", text: "Certificate of Completion" },
               { icon: "👥", text: "Student Community Access" },
               { icon: "🎓", text: "Career Path Guidance" },
+              { icon: "👨‍💻", text: "Weekly Saturday Reinforcement Classes (3 Months)" }
             ].map((item, idx) => (
               <div
                 key={idx}
@@ -486,10 +491,10 @@ export default function TeenProgramClient() {
               </p>
             )}
             <div className="space-y-2 text-sm text-white/60 mb-6">
-              <p>✓ 6 Weeks Live Online Program</p>
-              <p>✓ Ages 11–17 | Beginner Friendly</p>
+              <p>✓ 6 Weeks Intensive Live Bootcamp</p>
+              <p>✓ 3 Months Weekend Continuation Classes</p>
+              <p>✓ Mentor Support Throughout</p>
               <p>✓ Certificate of Completion</p>
-              <p>✓ Starts August 3, 2026</p>
             </div>
             <button
               onClick={() => router.push("/teen-program/register")}
