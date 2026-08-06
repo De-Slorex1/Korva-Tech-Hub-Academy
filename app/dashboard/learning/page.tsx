@@ -70,6 +70,13 @@ export default async function LearningPage() {
     }
   })
 
+  // Add this after the lessonProgress fetch
+  const { data: classSessions } = await supabaseAdmin
+    .from("class_sessions")
+    .select("course_id, module_index, lesson_index, session_date, topic_title")
+    .in("course_id", (enrollments ?? []).map((e) => e.course_id))
+    .order("session_date", { ascending: false })
+
   const totalStudyMinutes = studySessions?.reduce(
     (sum, s) => sum + s.duration_minutes, 0
   ) ?? 0
@@ -90,6 +97,7 @@ export default async function LearningPage() {
       totalStudyHours={totalStudyHours}
       cohortMemberCount={cohortCount ?? 0}
       userId={user.id}
+      classSessions={classSessions ?? []}
     />
   )
 }

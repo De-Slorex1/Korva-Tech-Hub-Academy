@@ -152,7 +152,7 @@ export default function TeenProgramClient() {
   const router = useRouter()
   const [openFaq, setOpenFaq] = useState<number | null>(null)
   const earlyBirdEnd = new Date("2026-08-10T23:59:59")
-  const programStart = new Date("2026-08-03T00:00:00")
+  const programStart = new Date("2026-08-10T00:00:00")
   const earlyBirdCountdown = useCountdown(earlyBirdEnd)
   const programCountdown = useCountdown(programStart)
   const now = new Date()

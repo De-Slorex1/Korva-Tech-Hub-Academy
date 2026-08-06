@@ -28,11 +28,20 @@ type Enrollment = {
   progressPercent: number
 }
 
+type ClassSession = {
+  course_id: string
+  module_index: number
+  lesson_index: number
+  session_date: string
+  topic_title: string
+}
+
 type Props = {
   enrollments: Enrollment[]
   totalStudyHours: number
   cohortMemberCount: number
   userId: string
+  classSessions: ClassSession[]
 }
 
 export default function LearningClient({
