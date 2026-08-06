@@ -140,7 +140,7 @@ const faqs = [
   },
   {
     question: "When does the program start?",
-    answer: "The program starts on August 3, 2026 and runs for 6 weeks, ending September 14, 2026.",
+    answer: "The program starts on August 10, 2026 and runs for 6 weeks, ending September 14, 2026.",
   },
   {
     question: "Can I get a refund?",
