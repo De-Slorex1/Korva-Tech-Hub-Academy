@@ -7,6 +7,7 @@ import { ArrowLeft, ArrowRight, User, Mail, Phone, Globe, GraduationCap, Loader2
 
 const COURSE_ID = "97436a3b-3046-48df-8c3a-05c92bae66ff" // ← paste the Course ID from Supabase here after inserting
 
+
 export default function TeenRegisterClient() {
   const router = useRouter()
   const [loading, setLoading] = useState(false)

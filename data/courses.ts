@@ -2414,8 +2414,208 @@ mentorSupport: true,
 lifetimeAccess: true,
 
 mentors: ["/uiux.png"]
-}
+},
+{
+  level: 7,
+  code: "thp",
 
+  title: "Korva Tech Holiday Program",
+  tagline: "Build real tech skills this holiday",
+
+  description:
+    "A 6-week intensive holiday program for secondary school students aged 11-17. Learn web development, AI tools, design thinking and build real projects — all from home.",
+
+  image: "/teen-program.png",
+  previewVideo: "",
+
+  duration: "6 Weeks",
+  price: {
+    fullPayment: {
+      discounted: "₦75,000",
+      original: "₦100,000",
+    },
+    installment: {
+      discounted: "₦75,000",
+      original: "₦100,000",
+    },
+  },
+  rating: 5.0,
+  students: 0,
+  projects: 6,
+  certificate: true,
+  category: "Holiday Program",
+  levelLabel: "Beginner",
+  color: "#f472b6",
+
+  stack: ["HTML", "CSS", "JavaScript", "Figma", "Canva", "ChatGPT"],
+
+  aiTouch: [
+    "AI tools for productivity",
+    "ChatGPT for learning",
+    "AI-powered projects",
+    "AI design assistance",
+  ],
+
+  stats: [
+    { label: "Duration", value: "6 Weeks" },
+    { label: "Ages", value: "11-17" },
+    { label: "Projects", value: "6" },
+    { label: "Rating", value: "5.0" },
+  ],
+
+  overview:
+    "The Korva Tech Holiday Program gives secondary school students a head start in technology. Over 6 weeks, students learn digital foundations, web design, JavaScript, UI/UX, AI tools, and build a real portfolio project.",
+
+  outcomes: [
+    "Use AI tools productively",
+    "Build a website from scratch",
+    "Create interactive web pages",
+    "Design user interfaces with Figma",
+    "Build AI-powered projects",
+    "Present a portfolio to mentors",
+  ],
+
+  curriculum: [
+    {
+      title: "Week 1: Digital Foundations & AI Tools",
+      duration: "1 Week",
+      lessons: [
+        "How the internet works",
+        "Introduction to AI (ChatGPT, Gemini)",
+        "Using AI for research and productivity",
+        "Basic typing and computer skills",
+      ],
+    },
+    {
+      title: "Week 2: Web Design with HTML & CSS",
+      duration: "1 Week",
+      lessons: [
+        "Building your first webpage",
+        "Colors, fonts and layouts",
+        "Making pages look professional",
+        "Responsive design basics",
+      ],
+    },
+    {
+      title: "Week 3: Making Pages Interactive with JavaScript",
+      duration: "1 Week",
+      lessons: [
+        "What is programming?",
+        "Buttons, forms and animations",
+        "Building a simple quiz app",
+        "Problem solving with code",
+      ],
+    },
+    {
+      title: "Week 4: UI/UX & Design Thinking",
+      duration: "1 Week",
+      lessons: [
+        "Canva for digital design",
+        "Figma basics",
+        "Designing a mobile app screen",
+        "User experience principles",
+      ],
+    },
+    {
+      title: "Week 5: AI-Powered Projects",
+      duration: "1 Week",
+      lessons: [
+        "Building with AI tools",
+        "ChatGPT for developers",
+        "Creating an AI-powered webpage",
+        "Presenting your work",
+      ],
+    },
+    {
+      title: "Week 6: Capstone Project & Graduation",
+      duration: "1 Week",
+      lessons: [
+        "Build a complete personal portfolio website",
+        "Present to mentors and parents",
+        "Certificate ceremony",
+        "Career path guidance",
+      ],
+    },
+  ],
+
+  projectsList: [
+    {
+      title: "My First Website",
+      description: "Build a personal webpage using HTML and CSS.",
+    },
+    {
+      title: "Quiz App",
+      description: "Build an interactive quiz using JavaScript.",
+    },
+    {
+      title: "Design Mockup",
+      description: "Design a mobile app screen in Figma.",
+    },
+    {
+      title: "AI-Powered Webpage",
+      description: "Build a webpage powered by AI tools.",
+    },
+    {
+      title: "Portfolio Website",
+      description: "Build and present a complete personal portfolio.",
+    },
+  ],
+
+  instructors: [
+    {
+      name: "Korva Tech Mentor",
+      role: "Teen Program Instructor",
+      image: "/mentor-1.png",
+      experience: "5+ Years",
+    },
+  ],
+
+  requirements: [
+    "Ages 11-17",
+    "Laptop or desktop computer",
+    "Internet connection",
+    "No prior experience required",
+  ],
+
+  targetAudience: [
+    "Secondary school students",
+    "Students on holiday break",
+    "Beginners with no tech experience",
+    "Students aged 11-17",
+  ],
+
+  includes: [
+    "Live Online Classes (4 days/week)",
+    "Experienced Tech Mentors",
+    "Hands-On Projects",
+    "AI Tools Training",
+    "Certificate of Completion",
+    "Community Access",
+  ],
+
+  faqs: [
+    {
+      question: "What age is this for?",
+      answer: "Students aged 11-17 years old.",
+    },
+    {
+      question: "Is it online?",
+      answer: "Yes, fully online with live classes 4 days a week.",
+    },
+  ],
+
+  courseOutline: "6",
+  courseDuration: "6 Weeks",
+  classSchedule: "4 Days / Week",
+  classFormat: "2 Hours Daily",
+  studyMaterials: true,
+  internship: false,
+  examIncluded: false,
+  communityAccess: true,
+  mentorSupport: true,
+  lifetimeAccess: false,
+  mentors: ["/mentor-1.png"],
+}
 ]
 
 export default courses;
