@@ -2425,7 +2425,7 @@ mentors: ["/uiux.png"]
   description:
     "A 6-week intensive holiday program for secondary school students aged 11-17. Learn web development, AI tools, design thinking and build real projects — all from home.",
 
-  image: "/teen-program.png",
+  image: "/teen.png",
   previewVideo: "",
 
   duration: "6 Weeks",
