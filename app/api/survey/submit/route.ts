@@ -10,6 +10,7 @@ export async function POST(req: Request) {
       fullName,
       email,
       whatsapp,
+      techJourney,
       currentStatus,
       goal,
       biggestChallenge,
@@ -25,13 +26,13 @@ export async function POST(req: Request) {
       )
     }
 
-    // Save to database
     const { error: dbError } = await supabaseAdmin
       .from("survey_leads")
       .insert({
         full_name: fullName,
         email,
         whatsapp,
+        tech_journey: techJourney,
         current_status: currentStatus,
         goal,
         biggest_challenge: biggestChallenge,
@@ -45,7 +46,6 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: dbError.message }, { status: 500 })
     }
 
-    // Send personalized email
     await sendSurveyEmail({
       email,
       data: { fullName, goal, biggestChallenge },

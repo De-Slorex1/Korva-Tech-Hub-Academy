@@ -1,12 +1,25 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { motion, AnimatePresence } from "framer-motion"
-import { ArrowRight, ArrowLeft, CheckCircle2, Loader2 } from "lucide-react"
+import { ArrowRight, ArrowLeft, CheckCircle2, Loader2, MessageCircle } from "lucide-react"
 
 const questions = [
   {
     id: 1,
+    question: "How would you describe your tech journey today?",
+    type: "single",
+    options: [
+      "I'm just exploring tech.",
+      "I know I want to learn tech but don't know where to start.",
+      "I've started learning but feel stuck.",
+      "I've completed a tech course.",
+      "I'm already working in tech.",
+      "Other",
+    ],
+  },
+  {
+    id: 2,
     question: "Which best describes you right now?",
     type: "single",
     options: [
@@ -20,7 +33,7 @@ const questions = [
     ],
   },
   {
-    id: 2,
+    id: 3,
     question: "Why do you want to break into tech?",
     subtitle: "Choose the one that matters most.",
     type: "single",
@@ -30,12 +43,12 @@ const questions = [
       "Change careers",
       "Freelance",
       "Build my own startup",
-      "I genuinely enjoy technology",
+      "I genuinely enjoy tech",
       "Other",
     ],
   },
   {
-    id: 3,
+    id: 4,
     question: "What's your biggest challenge right now?",
     type: "single",
     options: [
@@ -50,25 +63,26 @@ const questions = [
     ],
   },
   {
-    id: 4,
+    id: 5,
     question: "Have you tried learning tech before?",
     type: "tried",
     options: ["Yes", "No"],
   },
   {
-    id: 5,
+    id: 6,
     question: "Before investing in any tech school...",
     subtitle: "What's the ONE question you need answered before you can confidently say \"yes\"?",
     type: "text",
   },
   {
-    id: 6,
+    id: 7,
     question: "Where should we send your personalized recommendations?",
     type: "contact",
   },
 ]
 
 type Answers = {
+  techJourney: string
   currentStatus: string
   goal: string
   biggestChallenge: string
@@ -85,6 +99,7 @@ export default function SurveyClient() {
   const [step, setStep] = useState(0)
   const [loading, setLoading] = useState(false)
   const [answers, setAnswers] = useState<Answers>({
+    techJourney: "",
     currentStatus: "",
     goal: "",
     biggestChallenge: "",
@@ -101,32 +116,35 @@ export default function SurveyClient() {
 
   const getAnswerForStep = (stepIndex: number) => {
     switch (stepIndex) {
-      case 0: return answers.currentStatus
-      case 1: return answers.goal
-      case 2: return answers.biggestChallenge
-      case 3: return answers.triedBefore
-      case 4: return answers.burningQuestion
+      case 0: return answers.techJourney
+      case 1: return answers.currentStatus
+      case 2: return answers.goal
+      case 3: return answers.biggestChallenge
+      case 4: return answers.triedBefore
+      case 5: return answers.burningQuestion
       default: return ""
     }
   }
 
   const setAnswerForStep = (stepIndex: number, value: string) => {
     switch (stepIndex) {
-      case 0: setAnswers((p) => ({ ...p, currentStatus: value })); break
-      case 1: setAnswers((p) => ({ ...p, goal: value })); break
-      case 2: setAnswers((p) => ({ ...p, biggestChallenge: value })); break
-      case 3: setAnswers((p) => ({ ...p, triedBefore: value })); break
-      case 4: setAnswers((p) => ({ ...p, burningQuestion: value })); break
+      case 0: setAnswers((p) => ({ ...p, techJourney: value })); break
+      case 1: setAnswers((p) => ({ ...p, currentStatus: value })); break
+      case 2: setAnswers((p) => ({ ...p, goal: value })); break
+      case 3: setAnswers((p) => ({ ...p, biggestChallenge: value })); break
+      case 4: setAnswers((p) => ({ ...p, triedBefore: value })); break
+      case 5: setAnswers((p) => ({ ...p, burningQuestion: value })); break
     }
   }
 
   const canProceed = () => {
-    if (step === 0) return !!answers.currentStatus
-    if (step === 1) return !!answers.goal
-    if (step === 2) return !!answers.biggestChallenge
-    if (step === 3) return !!answers.triedBefore
-    if (step === 4) return !!answers.burningQuestion
-    if (step === 5) return !!answers.fullName && !!answers.email && !!answers.whatsapp
+    if (step === 0) return !!answers.techJourney
+    if (step === 1) return !!answers.currentStatus
+    if (step === 2) return !!answers.goal
+    if (step === 3) return !!answers.biggestChallenge
+    if (step === 4) return !!answers.triedBefore
+    if (step === 5) return !!answers.burningQuestion
+    if (step === 6) return !!answers.fullName && !!answers.email && !!answers.whatsapp
     return false
   }
 
@@ -151,13 +169,14 @@ export default function SurveyClient() {
     }
   }
 
+  // DONE PAGE
   if (stage === "done") {
     return (
       <div className="min-h-screen bg-[#050816] flex items-center justify-center p-6">
         <motion.div
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
-          className="text-center max-w-md"
+          className="text-center max-w-md w-full"
         >
           <div className="w-20 h-20 rounded-full bg-violet-500/20 flex items-center justify-center mx-auto mb-6">
             <CheckCircle2 className="w-10 h-10 text-violet-400" />
@@ -166,14 +185,35 @@ export default function SurveyClient() {
           <p className="text-white/60 text-lg mb-2">
             Hi {answers.fullName.split(" ")[0]}, your personalized recommendations are on their way.
           </p>
-          <p className="text-white/40 text-sm">
+          <p className="text-white/40 text-sm mb-8">
             Check your inbox at <span className="text-violet-400">{answers.email}</span>
           </p>
-          <div className="mt-8 p-4 rounded-2xl border border-violet-500/20 bg-violet-500/5">
+
+          {/* Community Link */}
+          <div className="rounded-2xl border border-green-500/30 bg-green-500/5 p-6 mb-6">
+            <div className="flex items-center justify-center gap-2 mb-3">
+              <MessageCircle className="w-5 h-5 text-green-400" />
+              <p className="text-green-400 font-semibold">Join Our Community</p>
+            </div>
+            <p className="text-white/60 text-sm mb-4">
+              Connect with other tech learners, get updates, and ask questions directly from our team.
+            </p>
+            <a
+              href="https://chat.whatsapp.com/JCKHLqVLkGcGwBUXV9GYOV"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 bg-green-500 hover:bg-green-400 text-white font-bold px-6 py-3 rounded-xl transition-colors w-full justify-center"
+            >
+              <MessageCircle className="w-4 h-4" />
+              Join WhatsApp Community
+            </a>
+          </div>
+
+          <div className="rounded-2xl border border-violet-500/20 bg-violet-500/5 p-4">
             <p className="text-sm text-violet-300">
-              While you wait, explore our programs at{" "}
+              Ready to explore our programs?{" "}
               <a href="/courses" className="underline hover:text-violet-200">
-                korvatechhub.com/courses
+                View all courses →
               </a>
             </p>
           </div>
@@ -182,6 +222,7 @@ export default function SurveyClient() {
     )
   }
 
+  // LANDING PAGE
   if (stage === "landing") {
     return (
       <div className="min-h-screen bg-[#050816] flex items-center justify-center p-6 relative overflow-hidden">
@@ -198,26 +239,34 @@ export default function SurveyClient() {
             <span className="text-violet-300 text-sm font-medium">FREE • 3-Minute Assessment</span>
           </div>
 
+          <p className="text-violet-400 font-semibold text-sm uppercase tracking-widest mb-4">
+            STOP. Don't choose a tech skill yet.
+          </p>
+
           <h1 className="text-4xl md:text-6xl font-extrabold text-white leading-tight mb-6">
-            Stop Guessing Your
+            Find The Right Path
             <span className="block bg-gradient-to-r from-violet-400 to-emerald-400 bg-clip-text text-transparent">
-              Way Into Tech.
+              Before You Invest.
             </span>
           </h1>
 
           <p className="text-lg text-white/60 mb-4 max-w-xl mx-auto">
-            Most beginners spend months learning the completely wrong skill.
+            The most expensive tech mistake isn't choosing the wrong school. It's spending months learning a skill that was never right for you.
           </p>
 
-          <p className="text-base text-white/50 mb-10 max-w-lg mx-auto">
-            Discover the exact bottleneck holding you back using our 180-second structural diagnostic test.
+          <p className="text-base text-white/40 mb-4 max-w-lg mx-auto">
+            Before you spend your money... before you spend six months learning... take the FREE Tech Path Assessment.
+          </p>
+
+          <p className="text-base text-white/50 mb-10 max-w-lg mx-auto font-medium">
+            It takes less than 3 minutes. It could save you months of learning the wrong thing.
           </p>
 
           <button
             onClick={() => setStage("survey")}
             className="inline-flex items-center gap-2 bg-gradient-to-r from-violet-500 to-emerald-500 text-white font-bold px-8 py-4 rounded-2xl text-lg hover:opacity-90 transition-opacity shadow-[0_0_40px_rgba(139,92,246,0.3)]"
           >
-            Start My Assessment
+            Take The Free Assessment
             <ArrowRight className="w-5 h-5" />
           </button>
 
@@ -227,6 +276,7 @@ export default function SurveyClient() {
     )
   }
 
+  // SURVEY
   return (
     <div className="min-h-screen bg-[#050816] flex items-center justify-center p-6 relative overflow-hidden">
       <div className="pointer-events-none absolute right-0 top-0 h-[500px] w-[500px] rounded-full bg-violet-500/10 blur-[140px]" />
