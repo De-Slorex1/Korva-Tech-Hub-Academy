@@ -10,13 +10,14 @@ export async function sendSurveyEmail({
     fullName: string
     goal: string
     biggestChallenge: string
+    workExcitement: string  // ← new
   }
 }) {
   try {
     const result = await resend.emails.send({
       from: "Korva Tech Hub <noreply@korvatechhub.com>",
       to: email,
-      subject: "About Your Tech Career Assessment",
+      subject: "Your Personalized Tech Path — Korva Tech Hub",
       html: surveyEmailTemplate(data),
     })
     console.log("Survey email sent:", result)

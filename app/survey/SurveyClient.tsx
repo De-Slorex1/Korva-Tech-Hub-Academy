@@ -64,18 +64,31 @@ const questions = [
   },
   {
     id: 5,
+    question: "What kind of work excites you most?",
+    type: "single",
+    options: [
+      "Building websites and apps people can see",
+      "Working behind the scenes with data and servers",
+      "Designing beautiful interfaces and user experiences",
+      "Analyzing data and finding business insights",
+      "Building AI and intelligent systems",
+      "I'm not sure yet",
+    ],
+  },
+  {
+    id: 6,
     question: "Have you tried learning tech before?",
     type: "tried",
     options: ["Yes", "No"],
   },
   {
-    id: 6,
+    id: 7,
     question: "Before investing in any tech school...",
     subtitle: "What's the ONE question you need answered before you can confidently say \"yes\"?",
     type: "text",
   },
   {
-    id: 7,
+    id: 8,
     question: "Where should we send your personalized recommendations?",
     type: "contact",
   },
@@ -86,6 +99,7 @@ type Answers = {
   currentStatus: string
   goal: string
   biggestChallenge: string
+  workExcitement: string  // ← new
   triedBefore: string
   stoppedReason: string
   burningQuestion: string
@@ -94,15 +108,18 @@ type Answers = {
   whatsapp: string
 }
 
+
 export default function SurveyClient() {
   const [stage, setStage] = useState<"landing" | "survey" | "done">("landing")
   const [step, setStep] = useState(0)
   const [loading, setLoading] = useState(false)
+  // Update initial state
   const [answers, setAnswers] = useState<Answers>({
     techJourney: "",
     currentStatus: "",
     goal: "",
     biggestChallenge: "",
+    workExcitement: "",  // ← new
     triedBefore: "",
     stoppedReason: "",
     burningQuestion: "",
@@ -115,38 +132,43 @@ export default function SurveyClient() {
   const totalSteps = questions.length
 
   const getAnswerForStep = (stepIndex: number) => {
-    switch (stepIndex) {
-      case 0: return answers.techJourney
-      case 1: return answers.currentStatus
-      case 2: return answers.goal
-      case 3: return answers.biggestChallenge
-      case 4: return answers.triedBefore
-      case 5: return answers.burningQuestion
-      default: return ""
-    }
+  switch (stepIndex) {
+    case 0: return answers.techJourney
+    case 1: return answers.currentStatus
+    case 2: return answers.goal
+    case 3: return answers.biggestChallenge
+    case 4: return answers.workExcitement  // ← new
+    case 5: return answers.triedBefore
+    case 6: return answers.burningQuestion
+    default: return ""
   }
+}
 
-  const setAnswerForStep = (stepIndex: number, value: string) => {
-    switch (stepIndex) {
-      case 0: setAnswers((p) => ({ ...p, techJourney: value })); break
-      case 1: setAnswers((p) => ({ ...p, currentStatus: value })); break
-      case 2: setAnswers((p) => ({ ...p, goal: value })); break
-      case 3: setAnswers((p) => ({ ...p, biggestChallenge: value })); break
-      case 4: setAnswers((p) => ({ ...p, triedBefore: value })); break
-      case 5: setAnswers((p) => ({ ...p, burningQuestion: value })); break
-    }
+ // Update setAnswerForStep
+const setAnswerForStep = (stepIndex: number, value: string) => {
+  switch (stepIndex) {
+    case 0: setAnswers((p) => ({ ...p, techJourney: value })); break
+    case 1: setAnswers((p) => ({ ...p, currentStatus: value })); break
+    case 2: setAnswers((p) => ({ ...p, goal: value })); break
+    case 3: setAnswers((p) => ({ ...p, biggestChallenge: value })); break
+    case 4: setAnswers((p) => ({ ...p, workExcitement: value })); break  // ← new
+    case 5: setAnswers((p) => ({ ...p, triedBefore: value })); break
+    case 6: setAnswers((p) => ({ ...p, burningQuestion: value })); break
   }
+}
 
-  const canProceed = () => {
-    if (step === 0) return !!answers.techJourney
-    if (step === 1) return !!answers.currentStatus
-    if (step === 2) return !!answers.goal
-    if (step === 3) return !!answers.biggestChallenge
-    if (step === 4) return !!answers.triedBefore
-    if (step === 5) return !!answers.burningQuestion
-    if (step === 6) return !!answers.fullName && !!answers.email && !!answers.whatsapp
-    return false
-  }
+// Update canProceed
+const canProceed = () => {
+  if (step === 0) return !!answers.techJourney
+  if (step === 1) return !!answers.currentStatus
+  if (step === 2) return !!answers.goal
+  if (step === 3) return !!answers.biggestChallenge
+  if (step === 4) return !!answers.workExcitement  // ← new
+  if (step === 5) return !!answers.triedBefore
+  if (step === 6) return !!answers.burningQuestion
+  if (step === 7) return !!answers.fullName && !!answers.email && !!answers.whatsapp
+  return false
+}
 
   const handleSubmit = async () => {
     setLoading(true)

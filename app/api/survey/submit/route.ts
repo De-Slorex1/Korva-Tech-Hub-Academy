@@ -14,6 +14,7 @@ export async function POST(req: Request) {
       currentStatus,
       goal,
       biggestChallenge,
+      workExcitement,  // ← new
       triedBefore,
       stoppedReason,
       burningQuestion,
@@ -26,20 +27,22 @@ export async function POST(req: Request) {
       )
     }
 
-    const { error: dbError } = await supabaseAdmin
-      .from("survey_leads")
-      .insert({
-        full_name: fullName,
-        email,
-        whatsapp,
-        tech_journey: techJourney,
-        current_status: currentStatus,
-        goal,
-        biggest_challenge: biggestChallenge,
-        tried_before: triedBefore,
-        stopped_reason: stoppedReason,
-        burning_question: burningQuestion,
-      })
+    // In the insert:
+  const { error: dbError } = await supabaseAdmin
+  .from("survey_leads")
+  .insert({
+    full_name: fullName,
+    email,
+    whatsapp,
+    tech_journey: techJourney,
+    current_status: currentStatus,
+    goal,
+    biggest_challenge: biggestChallenge,
+    work_excitement: workExcitement,  // ← new
+    tried_before: triedBefore,
+    stopped_reason: stoppedReason,
+    burning_question: burningQuestion,
+  })
 
     if (dbError) {
       console.error("DB Error:", dbError)
@@ -48,7 +51,7 @@ export async function POST(req: Request) {
 
     await sendSurveyEmail({
       email,
-      data: { fullName, goal, biggestChallenge },
+        data: { fullName, goal, biggestChallenge, workExcitement },  // ← add workExcitement
     })
 
     return NextResponse.json({ success: true })
@@ -60,3 +63,9 @@ export async function POST(req: Request) {
     )
   }
 }
+
+
+
+
+
+
