@@ -159,20 +159,8 @@ export function surveyEmailTemplate(data: {
                 </tr>
               </table>
 
-              <!-- CTA -->
-              <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:24px;">
-                <tr>
-                  <td align="center">
-                    <a href="${recommendation.link}"
-                       style="display:inline-block;background:linear-gradient(135deg,#7c3aed,#059669);color:#ffffff;text-decoration:none;padding:14px 40px;border-radius:10px;font-size:15px;font-weight:600;">
-                      View ${recommendation.path} →
-                    </a>
-                  </td>
-                </tr>
-              </table>
-
               <p style="margin:0 0 8px;color:#9ca3af;font-size:14px;line-height:1.6;">
-                Also join our WhatsApp community where we share free resources, answer questions, and help you take your next step 👇
+                For the next 7 days, we'd like you to experience that for yourself for free. No pressure . No long-term commitment just seven days to discover what learning with clarity feels like.
               </p>
 
               <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:24px;">
@@ -180,7 +168,7 @@ export function surveyEmailTemplate(data: {
                   <td align="center">
                     <a href="https://chat.whatsapp.com/JCKHLqVLkGcGwBUXV9GYOV"
                        style="display:inline-block;background:#25D366;color:#ffffff;text-decoration:none;padding:12px 32px;border-radius:10px;font-size:14px;font-weight:600;">
-                      Join WhatsApp Community →
+                      Start Your Free 7 day Experience
                     </a>
                   </td>
                 </tr>
