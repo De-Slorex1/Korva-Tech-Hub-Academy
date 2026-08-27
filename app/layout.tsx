@@ -105,7 +105,7 @@ export default function RootLayout({
                   }
                 };
 
-                ttq.load("D935FPBC77U79CKEN2O0");
+                ttq.load("DA7UVNJC77U5MK834PF0");;
                 ttq.page();
 
               }(window, document, "ttq");

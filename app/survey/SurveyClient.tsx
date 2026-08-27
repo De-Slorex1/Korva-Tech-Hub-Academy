@@ -170,26 +170,33 @@ const canProceed = () => {
   return false
 }
 
-  const handleSubmit = async () => {
-    setLoading(true)
-    try {
-      const res = await fetch("/api/survey/submit", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(answers),
-      })
-      const result = await res.json()
-      if (result.success) {
-        setStage("done")
-      } else {
-        alert(result.error ?? "Something went wrong")
+const handleSubmit = async () => {
+  setLoading(true)
+  try {
+    const res = await fetch("/api/survey/submit", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(answers),
+    })
+    const result = await res.json()
+
+    if (result.success) {
+      // Track on TikTok
+      if (typeof window !== "undefined" && (window as any).ttq) {
+        (window as any).ttq.track("SubmitForm", {
+          content_name: "Tech Path Assessment",
+        })
       }
-    } catch {
-      alert("Something went wrong. Please try again.")
-    } finally {
-      setLoading(false)
+      setStage("done")
+    } else {
+      alert(result.error ?? "Something went wrong")
     }
+  } catch {
+    alert("Something went wrong. Please try again.")
+  } finally {
+    setLoading(false)
   }
+}
 
   // DONE PAGE
   if (stage === "done") {
