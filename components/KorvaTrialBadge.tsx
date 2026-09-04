@@ -312,14 +312,31 @@ async function drawCard(
     SIZE
   );
 
-  // ------------------------------------
-  // Header
-  // ------------------------------------
+// ------------------------------------
+// Header Logo
+// ------------------------------------
 
-  ctx.textBaseline = "alphabetic";
+ctx.textBaseline = "alphabetic";
+ctx.textAlign = "left";
 
-  ctx.textAlign = "left";
+try {
+  const logo = await loadImageFromSrc(
+    "/Korva-logo.png"
+  );
 
+  const logoWidth = 150;
+  const logoHeight =
+    (logo.height / logo.width) * logoWidth;
+
+  ctx.drawImage(
+    logo,
+    72,
+    55,
+    logoWidth,
+    logoHeight
+  );
+} catch {
+  // Fallback if logo cannot be loaded
   ctx.fillStyle = COLORS.paper;
 
   ctx.font =
@@ -330,21 +347,7 @@ async function drawCard(
     72,
     108
   );
-
-  const korvaWidth =
-    ctx.measureText("Korva").width;
-
-  ctx.font =
-    "400 22px 'Inter', sans-serif";
-
-  ctx.fillStyle =
-    "rgba(246,241,231,0.72)";
-
-  ctx.fillText(
-    "Tech Hub Academy",
-    72 + korvaWidth + 14,
-    108
-  );
+}
 
   // ------------------------------------
   // Trial Pill
@@ -1055,8 +1058,8 @@ export default function KorvaTrialBadge() {
               <NextImage
                 src="/Korva-logo.png"
                 alt="Korva Tech Hub Academy logo"
-                width={100}
-                height={100}
+                width={150}
+                height={150}
                 priority
               />
             </div>
