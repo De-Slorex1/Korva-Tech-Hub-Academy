@@ -322,11 +322,10 @@ ctx.textAlign = "left";
 try {
   const logo = await loadImageFromSrc("/Korva-logo.png");
 
-  // Logo size
-  const logoWidth = 190;
+  // Larger, more visible logo
+  const logoWidth = 250;
   const logoHeight = (logo.height / logo.width) * logoWidth;
 
-  // Position logo vertically in the header
   const logoX = 72;
   const logoY = 84 - logoHeight / 2;
 
