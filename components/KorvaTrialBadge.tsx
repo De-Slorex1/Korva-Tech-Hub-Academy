@@ -2,6 +2,8 @@
 
 import { useEffect, useRef, useState } from "react";
 import { Inter, Space_Grotesk } from "next/font/google";
+import {Upload} from 'lucide-react'
+import Image from "next/image";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -28,7 +30,7 @@ const COLORS = {
 // Change these two values to your actual cohort dates.
 const TRIAL_LABEL = "7-Day Free Trial";
 const TRIAL_DATES = "Sept 5 – 11";
-const SITE = "korvatechhub.com";
+const SITE = "www.korvatechhub.com";
 
 const QUICK_MESSAGES = [
   "Starting my tech journey this week.",
@@ -651,13 +653,12 @@ export default function KorvaTrialBadge() {
           <header className="kv-header">
 
             <div className="kv-word">
-              Korva <span>Tech Hub Academy</span>
+              <Image src="/Korva-logo.png" alt="logo" width={100} height={100} />
             </div>
 
             <div className="kv-title">
               You&apos;re in. Make it official. 🎉
             </div>
-
             <p className="kv-sub">
               Create your personalized confirmation
               badge for the Korva Tech Hub 7-Day Free
@@ -748,7 +749,7 @@ export default function KorvaTrialBadge() {
                   />
                 ) : (
                   <div className="kv-upload-icon">
-                    📸
+                    <Upload />
                   </div>
                 )}
 
