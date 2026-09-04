@@ -1013,21 +1013,92 @@ const downloadBadge = () => {
   // WhatsApp sharing
   // ------------------------------------
 
-  const shareOnWhatsApp = () => {
-    const text =
-      encodeURIComponent(
-        `🎉 I'm officially starting my tech journey with Korva Tech Hub!\n\n` +
-          `I'm joining the ${TRIAL_LABEL}. 🚀\n\n` +
-          `Find your own tech path and start your journey with Korva Tech Hub.\n\n` +
-          `https://${SITE}`
-      );
+ const shareOnWhatsApp = async () => {
+  const canvas = canvasRef.current;
 
-    window.open(
-      `https://wa.me/?text=${text}`,
-      "_blank",
-      "noopener,noreferrer"
+  if (!canvas || !rendered) {
+    setError("Please create your badge first.");
+    return;
+  }
+
+  try {
+    const blob = await new Promise<Blob | null>((resolve) => {
+      canvas.toBlob(resolve, "image/png");
+    });
+
+    if (!blob) {
+      setError("Couldn't prepare your badge for sharing.");
+      return;
+    }
+
+    const safeName =
+      name
+        .trim()
+        .replace(/[^a-zA-Z0-9]+/g, "-")
+        .replace(/^-+|-+$/g, "")
+        .toLowerCase() || "korva";
+
+    const file = new File(
+      [blob],
+      `korva-7-day-trial-${safeName}.png`,
+      {
+        type: "image/png",
+      }
     );
-  };
+
+    const shareText =
+      `🎉 I'm officially starting my tech journey with Korva Tech Hub!\n\n` +
+      `I'm joining the ${TRIAL_LABEL}. 🚀\n\n` +
+      `Find your own tech path and start your journey with Korva Tech Hub.\n\n` +
+      `https://${SITE}`;
+
+    // Check whether the browser can share the image file
+    if (
+      navigator.canShare &&
+      navigator.canShare({ files: [file] })
+    ) {
+      await navigator.share({
+        files: [file],
+        text: shareText,
+        title: "My Korva Tech Hub Badge",
+      });
+
+      return;
+    }
+
+    // Fallback: download the badge if file sharing isn't supported
+    const url = URL.createObjectURL(blob);
+
+    const link = document.createElement("a");
+
+    link.href = url;
+    link.download = `korva-7-day-trial-${safeName}.png`;
+
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+
+    URL.revokeObjectURL(url);
+
+    setError(
+      "Your browser can't share images directly. Your badge has been downloaded instead. Open WhatsApp and attach the downloaded badge."
+    );
+  } catch (error) {
+    // User cancelled the share dialog
+    if (
+      error instanceof DOMException &&
+      error.name === "AbortError"
+    ) {
+      return;
+    }
+
+    console.error("WhatsApp sharing error:", error);
+
+    setError(
+      "Couldn't share your badge. Please try downloading it instead."
+    );
+  }
+};
 
   // ------------------------------------
   // Copy page link
