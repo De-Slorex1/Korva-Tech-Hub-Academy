@@ -324,8 +324,8 @@ try {
     "/Korva-logo.png"
   );
 
-  const logoWidth = 150;
-  const logoHeight =
+  const logoWidth = 250;
+  const logoHeight = 
     (logo.height / logo.width) * logoWidth;
 
   ctx.drawImage(
