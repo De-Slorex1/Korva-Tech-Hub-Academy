@@ -316,22 +316,24 @@ async function drawCard(
 // Header Logo
 // ------------------------------------
 
-ctx.textBaseline = "alphabetic";
+ctx.textBaseline = "middle";
 ctx.textAlign = "left";
 
 try {
-  const logo = await loadImageFromSrc(
-    "/Korva-logo.png"
-  );
+  const logo = await loadImageFromSrc("/Korva-logo.png");
 
-  const logoWidth = 250;
-  const logoHeight = 
-    (logo.height / logo.width) * logoWidth;
+  // Logo size
+  const logoWidth = 190;
+  const logoHeight = (logo.height / logo.width) * logoWidth;
+
+  // Position logo vertically in the header
+  const logoX = 72;
+  const logoY = 84 - logoHeight / 2;
 
   ctx.drawImage(
     logo,
-    72,
-    55,
+    logoX,
+    logoY,
     logoWidth,
     logoHeight
   );
@@ -342,13 +344,14 @@ try {
   ctx.font =
     "700 40px 'Space Grotesk', sans-serif";
 
+  ctx.textBaseline = "middle";
+
   ctx.fillText(
     "Korva",
     72,
-    108
+    84
   );
 }
-
   // ------------------------------------
   // Trial Pill
   // ------------------------------------
