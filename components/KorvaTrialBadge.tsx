@@ -954,49 +954,60 @@ export default function KorvaTrialBadge() {
   };
 
   // ------------------------------------
-  // Download badge
-  // ------------------------------------
+// Download badge
+// ------------------------------------
 
-  const downloadBadge = () => {
-    const canvas =
-      canvasRef.current;
+const downloadBadge = () => {
+  const canvas = canvasRef.current;
 
-    if (
-      !canvas ||
-      !rendered
-    ) {
-      return;
-    }
+  if (!canvas || !rendered) {
+    setError("Please create your badge first.");
+    return;
+  }
 
+  try {
     const safeName =
       name
         .trim()
-        .replace(
-          /[^a-zA-Z0-9]+/g,
-          "-"
-        )
-        .replace(
-          /^-+|-+$/g,
-          ""
-        )
-        .toLowerCase() ||
-      "korva";
+        .replace(/[^a-zA-Z0-9]+/g, "-")
+        .replace(/^-+|-+$/g, "")
+        .toLowerCase() || "korva";
 
-    const link =
-      document.createElement(
-        "a"
-      );
+    canvas.toBlob(
+      (blob) => {
+        if (!blob) {
+          setError(
+            "Couldn't prepare your badge for download. Please try again."
+          );
+          return;
+        }
 
-    link.download =
-      `korva-7-day-trial-${safeName}.png`;
+        const url = URL.createObjectURL(blob);
 
-    link.href =
-      canvas.toDataURL(
-        "image/png"
-      );
+        const link = document.createElement("a");
 
-    link.click();
-  };
+        link.href = url;
+        link.download = `korva-7-day-trial-${safeName}.png`;
+
+        // Add the link to the document before clicking.
+        document.body.appendChild(link);
+
+        link.click();
+
+        // Clean everything up.
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
+      },
+      "image/png"
+    );
+  } catch (error) {
+    console.error("Badge download error:", error);
+
+    setError(
+      "Couldn't download your badge. Please try again."
+    );
+  }
+};
 
   // ------------------------------------
   // WhatsApp sharing
