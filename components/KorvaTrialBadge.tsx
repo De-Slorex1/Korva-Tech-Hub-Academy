@@ -1066,7 +1066,7 @@ const downloadBadge = () => {
       return;
     }
 
-    // Fallback: download the badge if file sharing isn't supported
+    
     const url = URL.createObjectURL(blob);
 
     const link = document.createElement("a");
@@ -1084,7 +1084,6 @@ const downloadBadge = () => {
       "Your browser can't share images directly. Your badge has been downloaded instead. Open WhatsApp and attach the downloaded badge."
     );
   } catch (error) {
-    // User cancelled the share dialog
     if (
       error instanceof DOMException &&
       error.name === "AbortError"
