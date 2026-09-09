@@ -2623,7 +2623,7 @@ mentors: ["/uiux.png"]
   tagline: "Transition from healthcare into health data and informatics",
   description:
     "A 6-month job-ready program covering Health Informatics, Excel, SQL, Power BI and healthcare data analysis. Designed for healthcare professionals transitioning into health data and informatics roles.",
-  image: "/hia.png",
+  image: "/health.png",
   previewVideo: "",
   duration: "6 Months",
   price: {
@@ -2778,7 +2778,7 @@ mentors: ["/uiux.png"]
     {
       name: "Korva Tech Mentor",
       role: "Health Informatics & Data Analytics Instructor",
-      image: "/mentor-1.png",
+      image: "/health.png",
       experience: "6+ Years",
     },
   ],
@@ -2832,7 +2832,7 @@ mentors: ["/uiux.png"]
   communityAccess: true,
   mentorSupport: true,
   lifetimeAccess: false,
-  mentors: ["/mentor-1.png"],
+  mentors: ["/health.png"],
 }
 ]
 
