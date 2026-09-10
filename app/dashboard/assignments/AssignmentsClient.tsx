@@ -190,54 +190,57 @@ export default function AssignmentsClient({ assignments, userId, enrollments }: 
           <div className="grid grid-cols-3 gap-4 mb-4 pb-4 border-b border-border">
             <div>
               <p className="text-xs text-muted-foreground mb-1">Grade</p>
-              <p className="text-lg font-semibold text-accent">
-                {submission.grade !== null && (
-                  <div className="mt-3 rounded-lg bg-muted p-3 space-y-2">
-                    <div className="flex items-center justify-between">
-                      <span className="text-xs text-muted-foreground">Grade</span>
-                      <span className={`text-sm font-bold ${
-                        submission.grade >= 75
-                          ? 'text-green-400'
-                          : submission.grade >= 50
-                          ? 'text-yellow-400'
-                          : 'text-red-400'
-                      }`}>
-                        {submission.grade}/100
-                      </span>
-                    </div>
-                    {submission.feedback && (
-                      <div>
-                        <p className="text-xs text-muted-foreground mb-1">Instructor Feedback:</p>
-                        <p className="text-sm text-foreground">{submission.feedback}</p>
-                      </div>
-                    )}
-                  </div>
-                )}
+              <p className={`text-lg font-semibold ${
+                submission?.grade != null
+                  ? submission.grade >= 75 ? 'text-green-400'
+                  : submission.grade >= 50 ? 'text-yellow-400'
+                  : 'text-red-400'
+                  : 'text-muted-foreground'
+              }`}>
+                {submission?.grade != null ? `${submission.grade}/100` : "—"}
               </p>
             </div>
             <div>
               <p className="text-xs text-muted-foreground mb-1">Percentage</p>
               <p className="text-lg font-semibold text-foreground">
-                {submission?.grade != null
+                {submission?.grade != null && assignment.max_grade
                   ? `${Math.round((submission.grade / assignment.max_grade) * 100)}%`
                   : "—"}
               </p>
             </div>
             <div>
               <p className="text-xs text-muted-foreground mb-1">Due Date</p>
-              <p
-                className={`text-sm font-medium ${
-                  isOverdue && !submission ? "text-destructive" : "text-foreground"
-                }`}
-              >
-                {new Date(assignment.due_date).toLocaleDateString("en-NG", {
-                  day: "numeric",
-                  month: "short",
-                  year: "numeric",
-                })}
+              <p className={`text-sm font-medium ${
+                isOverdue && !submission ? "text-destructive" : "text-foreground"
+              }`}>
+                {assignment.due_date
+                  ? new Date(assignment.due_date).toLocaleDateString("en-NG", {
+                      day: "numeric", month: "short", year: "numeric",
+                    })
+                  : "No due date"
+                }
               </p>
             </div>
           </div>
+
+          {/* Feedback section - separate from the grid */}
+          {submission?.feedback && (
+            <div className="mb-4 rounded-lg bg-muted p-3 space-y-2">
+              <div className="flex items-center justify-between">
+                <p className="text-xs text-muted-foreground">Instructor Feedback</p>
+                {submission.grade != null && (
+                  <span className={`text-sm font-bold ${
+                    submission.grade >= 75 ? 'text-green-400'
+                    : submission.grade >= 50 ? 'text-yellow-400'
+                    : 'text-red-400'
+                  }`}>
+                    {submission.grade}/100
+                  </span>
+                )}
+              </div>
+              <p className="text-sm text-foreground">{submission.feedback}</p>
+            </div>
+          )}
 
           {submission?.feedback && (
             <div className="mb-4 p-3 bg-muted rounded-lg">

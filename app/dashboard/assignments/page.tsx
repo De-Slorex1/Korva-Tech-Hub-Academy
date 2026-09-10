@@ -58,18 +58,18 @@ export default async function AssignmentsPage() {
       courseCode: code,
       title: assignment.title as string,
       description: assignment.description as string,
-      due_date: assignment.due_date as string,
-      max_grade: assignment.max_grade as number,
+      due_date: assignment.due_date as string ?? null,
+      max_grade: (assignment.max_grade as number) ?? 100, // ← default to 100
       submission: submission ? {
         id: submission.id as string,
         assignment_id: submission.assignment_id as string,
-        submission_link: submission.submission_link as string | null,
-        note: submission.note as string | null,
+        submission_link: submission.github_url as string | null, // ← match column name
+        note: submission.notes as string | null, // ← match column name
         status: submission.status as string,
         grade: submission.grade as number | null,
         feedback: submission.feedback as string | null,
         submitted_at: submission.submitted_at as string,
-        graded_at: submission.graded_at as string | null,
+        graded_at: null,
       } : null,
     }
   })
