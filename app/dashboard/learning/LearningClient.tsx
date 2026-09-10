@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { BookOpen, Clock, Users, Award, ChevronDown, ChevronUp, CheckCircle2, Circle } from 'lucide-react'
 
+
 const containerVariants = {
   hidden: { opacity: 0 },
   visible: { opacity: 1, transition: { staggerChildren: 0.1 } },
@@ -36,19 +37,36 @@ type ClassSession = {
   topic_title: string
 }
 
+type AttendanceRecord = {
+  id: string
+  status: 'present' | 'absent' | 'late'
+  marked_at: string
+  session: {
+    id: string
+    topic_title: string
+    session_date: string
+    course_id: string
+  } | null
+}
+
 type Props = {
   enrollments: Enrollment[]
   totalStudyHours: number
   cohortMemberCount: number
   userId: string
   classSessions: ClassSession[]
+  attendanceRecords: AttendanceRecord[]  // ← add this
 }
+
+
 
 export default function LearningClient({
   enrollments,
   totalStudyHours,
   cohortMemberCount,
   userId,
+  classSessions,
+  attendanceRecords,
 }: Props) {
   const [expandedCourse, setExpandedCourse] = useState<string | null>(
     enrollments[0]?.id ?? null
@@ -255,6 +273,76 @@ export default function LearningClient({
                         ))}
                       </div>
                     )}
+
+                    {/* Attendance Summary */}
+                    {(() => {
+                      const courseAttendance = attendanceRecords.filter(
+                        (a) => a.session?.course_id === enrollment.course_id
+                      )
+                      if (courseAttendance.length === 0) return null
+
+                      const present = courseAttendance.filter((a) => a.status === 'present').length
+                      const late = courseAttendance.filter((a) => a.status === 'late').length
+                      const absent = courseAttendance.filter((a) => a.status === 'absent').length
+                      const total = courseAttendance.length
+                      const rate = Math.round(((present + late) / total) * 100)
+
+                      return (
+                        <div className="mt-4 rounded-lg border border-border overflow-hidden">
+                          <div className="bg-muted/50 px-4 py-3">
+                            <h4 className="text-sm font-semibold text-foreground">My Attendance</h4>
+                          </div>
+                          <div className="p-4">
+                            <div className="flex items-center justify-between mb-3">
+                              <div className="flex gap-4">
+                                <div className="text-center">
+                                  <p className="text-lg font-bold text-green-400">{present}</p>
+                                  <p className="text-xs text-muted-foreground">Present</p>
+                                </div>
+                                <div className="text-center">
+                                  <p className="text-lg font-bold text-yellow-400">{late}</p>
+                                  <p className="text-xs text-muted-foreground">Late</p>
+                                </div>
+                                <div className="text-center">
+                                  <p className="text-lg font-bold text-red-400">{absent}</p>
+                                  <p className="text-xs text-muted-foreground">Absent</p>
+                                </div>
+                              </div>
+                              <Badge className={`${
+                                rate >= 75
+                                  ? 'bg-green-500/20 text-green-400'
+                                  : rate >= 50
+                                  ? 'bg-yellow-500/20 text-yellow-400'
+                                  : 'bg-red-500/20 text-red-400'
+                              }`}>
+                                {rate}% attendance
+                              </Badge>
+                            </div>
+                            <div className="space-y-2">
+                              {courseAttendance.slice(0, 5).map((record) => (
+                                <div
+                                  key={record.id}
+                                  className="flex items-center justify-between text-xs"
+                                >
+                                  <span className="text-muted-foreground">
+                                    {record.session?.topic_title ?? "Class session"}
+                                  </span>
+                                  <Badge className={`text-xs ${
+                                    record.status === 'present'
+                                      ? 'bg-green-500/20 text-green-400'
+                                      : record.status === 'late'
+                                      ? 'bg-yellow-500/20 text-yellow-400'
+                                      : 'bg-red-500/20 text-red-400'
+                                  }`}>
+                                    {record.status}
+                                  </Badge>
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+                        </div>
+                      )
+                    })()}
                   </CardContent>
                 </Card>
               )

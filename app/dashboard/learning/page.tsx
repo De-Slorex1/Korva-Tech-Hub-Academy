@@ -91,13 +91,39 @@ export default async function LearningPage() {
       : ""
     )
 
-  return (
-    <LearningClient
-      enrollments={enrichedEnrollments}
-      totalStudyHours={totalStudyHours}
-      cohortMemberCount={cohortCount ?? 0}
-      userId={user.id}
-      classSessions={classSessions ?? []}
-    />
-  )
+    const { data: attendanceRecords } = await supabaseAdmin
+      .from("attendance")
+      .select(`
+        id,
+        status,
+        marked_at,
+        session:class_sessions(
+          id,
+          topic_title,
+          session_date,
+          course_id
+        )
+      `)
+      .eq("student_id", user.id)
+      .order("marked_at", { ascending: false })
+
+      const formattedAttendance = (attendanceRecords ?? []).map((record: any) => ({
+        id: record.id,
+        status: record.status as 'present' | 'absent' | 'late',
+        marked_at: record.marked_at,
+        session: Array.isArray(record.session)
+          ? record.session[0] ?? null
+          : record.session ?? null,
+      }))
+
+    return (
+      <LearningClient
+        enrollments={enrichedEnrollments}
+        totalStudyHours={totalStudyHours}
+        cohortMemberCount={cohortCount ?? 0}
+        userId={user.id}
+        classSessions={classSessions ?? []}
+        attendanceRecords={formattedAttendance}
+      />
+)
 }
