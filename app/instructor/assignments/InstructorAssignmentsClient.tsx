@@ -30,6 +30,7 @@ type Assignment = {
   due_date: string | null
   type: string
   created_at: string
+  file_url: string | null 
 }
 
 type Submission = {
@@ -91,14 +92,13 @@ export default function InstructorAssignmentsClient({
   const [localAssignments, setLocalAssignments] = useState<Assignment[]>(assignments)
   const [localSubmissions, setLocalSubmissions] = useState<Submission[]>(submissions)
 
-  // Create assignment form
   const [form, setForm] = useState({
     courseId: courses[0]?.courseId ?? "",
     title: "",
     description: "",
     dueDate: "",
   })
-
+  const [selectedFile, setSelectedFile] = useState<File | null>(null)
   const set = (key: string, value: string) =>
     setForm((prev) => ({ ...prev, [key]: value }))
 
@@ -107,32 +107,62 @@ export default function InstructorAssignmentsClient({
     setLoading(true)
 
     try {
-      const res = await fetch("/api/instructor/create-assignment", {
+        let fileUrl: string | null = null
+
+        // Upload file to Supabase storage if selected
+        if (selectedFile) {
+        const fileExt = selectedFile.name.split('.').pop()
+        const fileName = `${Date.now()}-${form.title.replace(/\s+/g, '-')}.${fileExt}`
+
+        const uploadRes = await fetch("/api/instructor/upload-file", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+            fileName,
+            fileType: selectedFile.type,
+            }),
+        })
+
+        const { signedUrl, publicUrl } = await uploadRes.json()
+
+        if (signedUrl) {
+            await fetch(signedUrl, {
+            method: "PUT",
+            body: selectedFile,
+            headers: { "Content-Type": selectedFile.type },
+            })
+            fileUrl = publicUrl
+        }
+        }
+
+        const res = await fetch("/api/instructor/create-assignment", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          courseId: form.courseId,
-          title: form.title,
-          description: form.description,
-          dueDate: form.dueDate || null,
-          type: isProjects ? "project" : "assignment",
+            courseId: form.courseId,
+            title: form.title,
+            description: form.description,
+            dueDate: form.dueDate || null,
+            type: isProjects ? "project" : "assignment",
+            fileUrl,
         }),
-      })
+        })
 
-      const result = await res.json()
-      if (result.success) {
+        const result = await res.json()
+        if (result.success) {
         setLocalAssignments((prev) => [result.assignment, ...prev])
         setShowCreateModal(false)
+        setSelectedFile(null)
         setForm({ courseId: courses[0]?.courseId ?? "", title: "", description: "", dueDate: "" })
-      } else {
-        alert(result.error ?? "Failed to create assignment")
-      }
+        } else {
+        alert(result.error ?? "Failed to create")
+        }
     } catch {
-      alert("Something went wrong")
+        alert("Something went wrong")
     } finally {
-      setLoading(false)
+        setLoading(false)
     }
-  }
+    }
 
   const handleGrade = async () => {
     if (!selectedSubmission || !grade) return
@@ -202,7 +232,7 @@ export default function InstructorAssignmentsClient({
       <motion.div variants={itemVariants}>
         <div className="flex gap-2 border-b border-border">
           {[
-            { id: 'assignments', label: 'All Assignments' },
+            { id: 'assignments', label: isProjects ? 'All Projects' : 'All Assignments' },
             { id: 'grade', label: `Pending Review ${pendingCount > 0 ? `(${pendingCount})` : ''}` },
           ].map((tab) => (
             <button
@@ -251,7 +281,7 @@ export default function InstructorAssignmentsClient({
                         <div className="flex items-center gap-2 mb-1">
                           <h3 className="font-semibold text-foreground">{assignment.title}</h3>
                           <Badge className="bg-primary/20 text-primary text-xs">
-                            Assignment
+                            {isProjects ? "Project" : "Assignment"}
                           </Badge>
                         </div>
                         <p className="text-sm text-muted-foreground mb-2">
@@ -280,6 +310,20 @@ export default function InstructorAssignmentsClient({
                             {assignment.description}
                           </p>
                         </div>
+
+                        {/* Add after the description box in the expanded section */}
+                            {assignment.file_url && (
+                            <a
+                                href={assignment.file_url}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="flex items-center gap-2 text-sm text-primary hover:underline"
+                            >
+                                <FileText className="w-4 h-4" />
+                                Download Attachment
+                            </a>
+                            )
+                        }
 
                         <h4 className="text-sm font-semibold text-foreground">
                           Student Submissions ({subs.length})
@@ -433,7 +477,9 @@ export default function InstructorAssignmentsClient({
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
           <div className="bg-card border border-border rounded-2xl p-6 w-full max-w-md shadow-xl">
             <div className="flex items-center justify-between mb-6">
-              <h3 className="text-lg font-bold text-foreground">New Assignment</h3>
+              <h3 className="text-lg font-bold text-foreground">
+                {isProjects ? "New Project" : "New Assignment"}
+              </h3>
               <button onClick={() => setShowCreateModal(false)}>
                 <X className="w-5 h-5 text-muted-foreground" />
               </button>
@@ -474,6 +520,41 @@ export default function InstructorAssignmentsClient({
                   className="w-full px-4 py-3 bg-muted border border-border rounded-lg text-foreground placeholder:text-muted-foreground outline-none focus:border-primary text-sm resize-none"
                 />
               </div>
+              <div>
+                <label className="text-sm font-medium text-muted-foreground mb-2 block">
+                    Attachment (optional)
+                </label>
+                <div className="relative">
+                    <input
+                    type="file"
+                    id="assignment-file"
+                    accept=".pdf,.doc,.docx,.png,.jpg,.jpeg,.zip"
+                    onChange={(e) => setSelectedFile(e.target.files?.[0] ?? null)}
+                    className="hidden"
+                    />
+                    <label
+                    htmlFor="assignment-file"
+                    className="flex items-center gap-3 w-full px-4 py-3 bg-muted border border-border border-dashed rounded-lg text-muted-foreground cursor-pointer hover:border-primary hover:text-primary transition-colors text-sm"
+                    >
+                    <FileText className="w-4 h-4 shrink-0" />
+                    {selectedFile
+                        ? selectedFile.name
+                        : "Click to upload a file (PDF, DOC, image, ZIP)"
+                    }
+                    </label>
+                    {selectedFile && (
+                    <button
+                        onClick={() => setSelectedFile(null)}
+                        className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-destructive"
+                    >
+                        <X className="w-4 h-4" />
+                    </button>
+                    )}
+                </div>
+                <p className="text-xs text-muted-foreground mt-1">
+                    Max file size: 10MB
+                </p>
+                </div>
 
               <div>
                 <label className="text-sm font-medium text-muted-foreground mb-2 block">Due Date (optional)</label>

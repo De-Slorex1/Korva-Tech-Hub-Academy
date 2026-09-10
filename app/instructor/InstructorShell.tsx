@@ -17,7 +17,6 @@ const navigationItems = [
   { name: 'My Courses', href: '/instructor/courses', icon: BookOpen },
   { name: 'Students', href: '/instructor/students', icon: Users },
   { name: 'Assignments', href: '/instructor/assignments', icon: FileText },
-  { name: 'Projects', href: '/instructor/projects', icon: FileText },
   { name: 'Attendance', href: '/instructor/attendance', icon: ClipboardList },
   { name: 'Announcements', href: '/instructor/announcements', icon: Bell },
   { name: 'Settings', href: '/instructor/settings', icon: Settings },
