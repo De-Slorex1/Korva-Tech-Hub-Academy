@@ -23,6 +23,7 @@ type Submission = {
   id: string
   assignment_id: string
   submission_link: string | null
+  file_url: string | null  // ← add this
   note: string | null
   status: string
   grade: number | null
@@ -61,6 +62,8 @@ export default function AssignmentsClient({ assignments, userId, enrollments }: 
   const [note, setNote] = useState("")
   const [loading, setLoading] = useState(false)
   const [localSubmissions, setLocalSubmissions] = useState<Record<string, Submission>>({})
+  const [selectedFile, setSelectedFile] = useState<File | null>(null)
+  const [uploadProgress, setUploadProgress] = useState(false)
 
   const getSubmission = (assignment: Assignment) =>
     localSubmissions[assignment.id] ?? assignment.submission
@@ -71,57 +74,93 @@ export default function AssignmentsClient({ assignments, userId, enrollments }: 
   }
 
   const handleSubmit = async (assignment: Assignment) => {
-    if (!link.trim()) {
-      alert("Please enter a submission link.")
-      return
-    }
+  if (!link.trim() && !selectedFile) {
+    alert("Please enter a submission link or upload a file.")
+    return
+  }
 
-    const enrollment = enrollments.find((e) => e.course_id === assignment.course_id)
-    if (!enrollment) return
+  const enrollment = enrollments.find((e) => e.course_id === assignment.course_id)
+  if (!enrollment) return
 
-    setLoading(true)
+  setLoading(true)
 
-    try {
-      const res = await fetch("/api/assignments/submit", {
+  try {
+    let fileUrl: string | null = null
+
+    // Upload file if selected
+    if (selectedFile) {
+      setUploadProgress(true)
+      const fileExt = selectedFile.name.split('.').pop()
+      const fileName = `${Date.now()}-${selectedFile.name.replace(/\s+/g, '-')}`
+
+      const uploadRes = await fetch("/api/assignments/upload-file", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          assignmentId: assignment.id,
-          enrollmentId: enrollment.id,
-          submissionLink: link,
-          note,
+          fileName,
+          fileType: selectedFile.type,
         }),
       })
 
-      const result = await res.json()
+      const { signedUrl, publicUrl } = await uploadRes.json()
 
-      if (result.success) {
-        setLocalSubmissions((prev) => ({
-          ...prev,
-          [assignment.id]: {
-            id: result.submission.id,
-            assignment_id: assignment.id,
-            submission_link: link,
-            note,
-            status: "submitted",
-            grade: null,
-            feedback: null,
-            submitted_at: new Date().toISOString(),
-            graded_at: null,
-          },
-        }))
-        setActiveModal(null)
-        setLink("")
-        setNote("")
-      } else {
-        alert(result.error ?? "Submission failed")
+      if (signedUrl) {
+        await fetch(signedUrl, {
+          method: "PUT",
+          body: selectedFile,
+          headers: { "Content-Type": selectedFile.type },
+        })
+        fileUrl = publicUrl
       }
-    } catch {
-      alert("Something went wrong")
-    } finally {
-      setLoading(false)
+      setUploadProgress(false)
     }
+
+    const res = await fetch("/api/assignments/submit", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        assignmentId: assignment.id,
+        enrollmentId: enrollment.id,
+        submissionLink: link || fileUrl,
+        fileUrl,
+        note,
+      }),
+    })
+
+    const result = await res.json()
+
+    if (result.success) {
+      const submissionFileUrl = fileUrl  // ← capture it
+
+      setLocalSubmissions((prev) => ({
+        ...prev,
+        [assignment.id]: {
+          id: result.submission.id,
+          assignment_id: assignment.id,
+          submission_link: link || submissionFileUrl || null,
+          file_url: submissionFileUrl || null,  // ← add this
+          note,
+          status: "submitted",
+          grade: null,
+          feedback: null,
+          submitted_at: new Date().toISOString(),
+          graded_at: null,
+        },
+      }))
+      setActiveModal(null)
+      setLink("")
+      setNote("")
+      setSelectedFile(null)
+    } else {
+      alert(result.error ?? "Submission failed")
+    }
+  } catch {
+    alert("Something went wrong")
+  } finally {
+    setLoading(false)
+    setUploadProgress(false)
   }
+}
 
   const pending = assignments.filter((a) => !getSubmission(a))
   const submitted = assignments.filter((a) => {
@@ -258,6 +297,19 @@ export default function AssignmentsClient({ assignments, userId, enrollments }: 
             >
               <ExternalLink className="w-4 h-4" />
               View Submission
+            </a>
+          )}
+
+          {/* Add right here ↓ */}
+          {submission?.file_url && (
+            <a
+              href={submission.file_url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-2 text-sm text-primary hover:underline mb-4"
+            >
+              <FileText className="w-4 h-4" />
+              Download Submitted File
             </a>
           )}
 
@@ -420,7 +472,10 @@ export default function AssignmentsClient({ assignments, userId, enrollments }: 
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-lg font-bold text-foreground">Submit Assignment</h3>
               <button
-                onClick={() => setActiveModal(null)}
+                onClick={() => {
+                  setActiveModal(null)
+                  setSelectedFile(null)
+                }}
                 className="text-muted-foreground hover:text-foreground"
               >
                 <X className="w-5 h-5" />
@@ -430,9 +485,11 @@ export default function AssignmentsClient({ assignments, userId, enrollments }: 
             <p className="text-sm text-muted-foreground mb-4">{activeModal.title}</p>
 
             <div className="space-y-4">
+
+              {/* Link submission */}
               <div>
                 <label className="text-sm font-medium text-muted-foreground mb-2 block">
-                  Submission Link (GitHub / Google Drive) *
+                  Submission Link (GitHub / Google Drive)
                 </label>
                 <input
                   type="url"
@@ -443,9 +500,60 @@ export default function AssignmentsClient({ assignments, userId, enrollments }: 
                 />
               </div>
 
+              {/* Divider */}
+              <div className="flex items-center gap-3">
+                <div className="flex-1 h-px bg-border" />
+                <span className="text-xs text-muted-foreground">OR</span>
+                <div className="flex-1 h-px bg-border" />
+              </div>
+
+              {/* File upload */}
               <div>
                 <label className="text-sm font-medium text-muted-foreground mb-2 block">
-                  Note (optional)
+                  Upload File
+                </label>
+                <input
+                  type="file"
+                  id="submission-file"
+                  accept=".pdf,.doc,.docx,.png,.jpg,.jpeg,.zip,.html,.css,.js,.ts,.xlsx,.csv"
+                  onChange={(e) => setSelectedFile(e.target.files?.[0] ?? null)}
+                  className="hidden"
+                />
+                <label
+                  htmlFor="submission-file"
+                  className={`flex items-center gap-3 w-full px-4 py-3 border border-dashed rounded-lg cursor-pointer transition-colors text-sm ${
+                    selectedFile
+                      ? 'border-primary bg-primary/5 text-primary'
+                      : 'border-border bg-muted text-muted-foreground hover:border-primary hover:text-primary'
+                  }`}
+                >
+                  <FileText className="w-4 h-4 shrink-0" />
+                  <span className="truncate">
+                    {selectedFile ? selectedFile.name : "Click to upload a file"}
+                  </span>
+                </label>
+                {selectedFile && (
+                  <div className="flex items-center justify-between mt-2">
+                    <p className="text-xs text-muted-foreground">
+                      {(selectedFile.size / 1024 / 1024).toFixed(2)} MB
+                    </p>
+                    <button
+                      onClick={() => setSelectedFile(null)}
+                      className="text-xs text-red-400 hover:text-red-300"
+                    >
+                      Remove
+                    </button>
+                  </div>
+                )}
+                <p className="text-xs text-muted-foreground mt-1">
+                  Accepted: PDF, DOC, images, ZIP, HTML, CSS, JS, Excel. Max 10MB.
+                </p>
+              </div>
+
+              {/* Note */}
+              <div>
+                <label className="text-sm font-medium text-muted-foreground mb-2 block">
+                  Note for instructor (optional)
                 </label>
                 <textarea
                   value={note}
@@ -456,20 +564,31 @@ export default function AssignmentsClient({ assignments, userId, enrollments }: 
                 />
               </div>
 
+              {/* Upload progress */}
+              {uploadProgress && (
+                <div className="flex items-center gap-2 text-sm text-primary">
+                  <div className="w-4 h-4 border-2 border-primary border-t-transparent rounded-full animate-spin" />
+                  Uploading file...
+                </div>
+              )}
+
               <div className="flex gap-3">
                 <Button
                   variant="outline"
                   className="flex-1"
-                  onClick={() => setActiveModal(null)}
+                  onClick={() => {
+                    setActiveModal(null)
+                    setSelectedFile(null)
+                  }}
                 >
                   Cancel
                 </Button>
                 <Button
                   className="flex-1 bg-primary hover:bg-primary/90"
                   onClick={() => handleSubmit(activeModal)}
-                  disabled={loading}
+                  disabled={loading || (!link.trim() && !selectedFile)}
                 >
-                  {loading ? "Submitting..." : "Submit"}
+                  {loading ? (uploadProgress ? "Uploading..." : "Submitting...") : "Submit"}
                 </Button>
               </div>
             </div>

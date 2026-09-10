@@ -63,8 +63,9 @@ export default async function AssignmentsPage() {
       submission: submission ? {
         id: submission.id as string,
         assignment_id: submission.assignment_id as string,
-        submission_link: submission.github_url as string | null, // ← match column name
-        note: submission.notes as string | null, // ← match column name
+        submission_link: submission.submission_link as string | null,
+        file_url: submission.file_url as string | null,  // ← add this
+        note: submission.note as string | null,
         status: submission.status as string,
         grade: submission.grade as number | null,
         feedback: submission.feedback as string | null,

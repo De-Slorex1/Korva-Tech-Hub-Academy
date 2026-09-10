@@ -6,13 +6,13 @@ export async function POST(req: Request) {
 
   const { data, error } = await supabaseAdmin.storage
     .from("assignments")
-    .createSignedUploadUrl(fileName)
+    .createSignedUploadUrl(`submissions/${fileName}`)
 
   if (error) return NextResponse.json({ error: error.message }, { status: 500 })
 
   const publicUrl = supabaseAdmin.storage
     .from("assignments")
-    .getPublicUrl(fileName).data.publicUrl
+    .getPublicUrl(`submissions/${fileName}`).data.publicUrl
 
   return NextResponse.json({
     signedUrl: data.signedUrl,
