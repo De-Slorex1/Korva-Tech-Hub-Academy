@@ -130,7 +130,11 @@ export default function LearningClient({
           { label: 'Active Courses', value: enrollments.length.toString(), icon: BookOpen },
           { label: 'Study Time', value: `${totalStudyHours} hrs`, icon: Clock },
           { label: 'Study Group', value: `${cohortMemberCount} members`, icon: Users },
-          { label: 'Certificates', value: 'Coming Soon', icon: Award },
+          {
+            label: 'Classes Attended',
+            value: `${attendanceRecords.filter((a) => a.status === 'present' || a.status === 'late').length}/${classSessions.length}`,
+            icon: Award
+          },
         ].map((stat, idx) => {
           const Icon = stat.icon
           return (
@@ -279,20 +283,47 @@ export default function LearningClient({
                       const courseAttendance = attendanceRecords.filter(
                         (a) => a.session?.course_id === enrollment.course_id
                       )
+                      const courseSessionsTotal = classSessions.filter(
+                        (s) => s.course_id === enrollment.course_id
+                      ).length
+
                       if (courseAttendance.length === 0) return null
 
                       const present = courseAttendance.filter((a) => a.status === 'present').length
                       const late = courseAttendance.filter((a) => a.status === 'late').length
                       const absent = courseAttendance.filter((a) => a.status === 'absent').length
+                      const attended = present + late
                       const total = courseAttendance.length
-                      const rate = Math.round(((present + late) / total) * 100)
+                      const rate = Math.round((attended / total) * 100)
 
                       return (
-                        <div className="mt-4 rounded-lg border border-border overflow-hidden">
-                          <div className="bg-muted/50 px-4 py-3">
+                        <div className="mx-6 mb-6 rounded-lg border border-border overflow-hidden">
+                          <div className="bg-muted/50 px-4 py-3 flex items-center justify-between">
                             <h4 className="text-sm font-semibold text-foreground">My Attendance</h4>
+                            <span className="text-xs font-bold text-accent">
+                              {attended}/{courseSessionsTotal} classes
+                            </span>
                           </div>
-                          <div className="p-4">
+
+                          {/* Progress Bar */}
+                          <div className="px-4 pt-3">
+                            <div className="w-full h-2 bg-muted rounded-full overflow-hidden">
+                              <div
+                                className={`h-full rounded-full transition-all duration-500 ${
+                                  rate >= 75 ? 'bg-green-400' : rate >= 50 ? 'bg-yellow-400' : 'bg-red-400'
+                                }`}
+                                style={{ width: `${rate}%` }}
+                              />
+                            </div>
+                            <div className="flex justify-between mt-1 mb-3">
+                              <span className="text-xs text-muted-foreground">{rate}% attendance rate</span>
+                              {rate < 75 && (
+                                <span className="text-xs text-red-400">Below 75% minimum</span>
+                              )}
+                            </div>
+                          </div>
+
+                          <div className="px-4 pb-4">
                             <div className="flex items-center justify-between mb-3">
                               <div className="flex gap-4">
                                 <div className="text-center">
@@ -307,6 +338,12 @@ export default function LearningClient({
                                   <p className="text-lg font-bold text-red-400">{absent}</p>
                                   <p className="text-xs text-muted-foreground">Absent</p>
                                 </div>
+                                <div className="text-center">
+                                  <p className="text-lg font-bold text-muted-foreground">
+                                    {courseSessionsTotal - total}
+                                  </p>
+                                  <p className="text-xs text-muted-foreground">Upcoming</p>
+                                </div>
                               </div>
                               <Badge className={`${
                                 rate >= 75
@@ -315,18 +352,23 @@ export default function LearningClient({
                                   ? 'bg-yellow-500/20 text-yellow-400'
                                   : 'bg-red-500/20 text-red-400'
                               }`}>
-                                {rate}% attendance
+                                {attended}/{courseSessionsTotal}
                               </Badge>
                             </div>
-                            <div className="space-y-2">
-                              {courseAttendance.slice(0, 5).map((record) => (
+
+                            {/* Session list */}
+                            <div className="space-y-2 mt-2">
+                              {courseAttendance.slice(0, 5).map((record, idx) => (
                                 <div
                                   key={record.id}
-                                  className="flex items-center justify-between text-xs"
+                                  className="flex items-center justify-between text-xs py-1"
                                 >
-                                  <span className="text-muted-foreground">
-                                    {record.session?.topic_title ?? "Class session"}
-                                  </span>
+                                  <div className="flex items-center gap-2">
+                                    <span className="text-muted-foreground w-4">{idx + 1}.</span>
+                                    <span className="text-muted-foreground">
+                                      {record.session?.topic_title ?? "Class session"}
+                                    </span>
+                                  </div>
                                   <Badge className={`text-xs ${
                                     record.status === 'present'
                                       ? 'bg-green-500/20 text-green-400'
@@ -338,6 +380,11 @@ export default function LearningClient({
                                   </Badge>
                                 </div>
                               ))}
+                              {courseAttendance.length > 5 && (
+                                <p className="text-xs text-muted-foreground text-center pt-1">
+                                  +{courseAttendance.length - 5} more sessions
+                                </p>
+                              )}
                             </div>
                           </div>
                         </div>
