@@ -39,8 +39,10 @@ export default async function InstructorAssignmentsPage() {
     .order("created_at", { ascending: false })
 
   // Get all submissions for these assignments
-  const assignmentIds = (assignments ?? []).map((a) => a.id)
- const { data: submissions } = await supabaseAdmin
+  // Get all submissions for these assignments
+const assignmentIds = (assignments ?? []).map((a) => a.id)
+
+const { data: submissions } = await supabaseAdmin
   .from("assignment_submissions")
   .select(`
     id,
@@ -55,10 +57,18 @@ export default async function InstructorAssignmentsPage() {
     grade,
     feedback,
     submitted_at,
-    profile:profiles(first_name, last_name, email, student_id)
+    file_url
   `)
   .in("assignment_id", assignmentIds.length > 0 ? assignmentIds : [""])
   .order("submitted_at", { ascending: false })
+
+// Get profiles separately
+const submissionUserIds = (submissions ?? []).map((s) => s.user_id)
+const { data: submissionProfiles } = await supabaseAdmin
+  .from("profiles")
+  .select("user_id, first_name, last_name, email, student_id")
+  .in("user_id", submissionUserIds.length > 0 ? submissionUserIds : [""])
+
   // Get enrolled students
   const { data: enrollments } = await supabaseAdmin
     .from("enrollments")
@@ -81,18 +91,18 @@ export default async function InstructorAssignmentsPage() {
   })
 
   return (
-    <InstructorAssignmentsClient
-      courses={enrichedCourses}
-      assignments={assignments ?? []}
-      submissions={(submissions ?? []).map((s: any) => ({
-        ...s,
-        profile: Array.isArray(s.profile) ? s.profile[0] : s.profile,
-      }))}
-      enrollments={(enrollments ?? []).map((e: any) => ({
-        ...e,
-        profile: Array.isArray(e.profile) ? e.profile[0] : e.profile,
-      }))}
-      instructorId={user.id}
-    />
-  )
+  <InstructorAssignmentsClient
+    courses={enrichedCourses}
+    assignments={assignments ?? []}
+    submissions={(submissions ?? []).map((s: any) => ({
+      ...s,
+      profile: submissionProfiles?.find((p) => p.user_id === s.user_id) ?? null,
+    }))}
+    enrollments={(enrollments ?? []).map((e: any) => ({
+      ...e,
+      profile: Array.isArray(e.profile) ? e.profile[0] : e.profile,
+    }))}
+    instructorId={user.id}
+  />
+)
 }
