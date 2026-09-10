@@ -40,15 +40,25 @@ export default async function InstructorAssignmentsPage() {
 
   // Get all submissions for these assignments
   const assignmentIds = (assignments ?? []).map((a) => a.id)
-  const { data: submissions } = await supabaseAdmin
-    .from("assignment_submissions")
-    .select(`
-      *,
-      profile:profiles(first_name, last_name, email, student_id)
-    `)
-    .in("assignment_id", assignmentIds.length > 0 ? assignmentIds : [""])
-    .order("submitted_at", { ascending: false })
-
+ const { data: submissions } = await supabaseAdmin
+  .from("assignment_submissions")
+  .select(`
+    id,
+    assignment_id,
+    user_id,
+    enrollment_id,
+    submission_link,
+    github_url,
+    note,
+    notes,
+    status,
+    grade,
+    feedback,
+    submitted_at,
+    profile:profiles(first_name, last_name, email, student_id)
+  `)
+  .in("assignment_id", assignmentIds.length > 0 ? assignmentIds : [""])
+  .order("submitted_at", { ascending: false })
   // Get enrolled students
   const { data: enrollments } = await supabaseAdmin
     .from("enrollments")

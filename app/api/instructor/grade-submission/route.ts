@@ -25,12 +25,14 @@ export async function POST(req: Request) {
 
   // Update submission
   const { data: submission, error } = await supabaseAdmin
-    .from("assignment_submissions")
-    .update({ grade, feedback, status: "graded" })
-    .eq("id", submissionId)
-    .select("*, assignment:assignments(title, type)")
-    .single()
-
+  .from("assignment_submissions")
+  .update({ grade, feedback, status: "graded" })
+  .eq("id", submissionId)
+  .select(`
+    *,
+    assignment:assignments(title, type)
+  `)
+  .single()
   if (error) return NextResponse.json({ error: error.message }, { status: 500 })
 
   // Get student profile

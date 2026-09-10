@@ -33,12 +33,15 @@ type Assignment = {
   file_url: string | null 
 }
 
+
 type Submission = {
   id: string
   assignment_id: string
   user_id: string
+  submission_link: string | null  // ← add this
   github_url: string | null
   live_url: string | null
+  note: string | null
   notes: string | null
   status: string
   grade: number | null
@@ -354,9 +357,9 @@ export default function InstructorAssignmentsClient({
                                   )}
                                 </div>
                                 <div className="flex items-center gap-2">
-                                  {sub.github_url && (
-                                    <a
-                                      href={sub.github_url}
+                                  {sub.submission_link && (
+                                      <a
+                                      href={sub.submission_link}
                                       target="_blank"
                                       rel="noopener noreferrer"
                                       className="text-xs text-primary flex items-center gap-1"
@@ -600,9 +603,9 @@ export default function InstructorAssignmentsClient({
             </div>
 
             <div className="space-y-4">
-              {selectedSubmission.github_url && (
+              {selectedSubmission.submission_link && (
                 <a
-                  href={selectedSubmission.github_url}
+                  href={selectedSubmission.submission_link}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex items-center gap-2 text-sm text-primary hover:underline"
@@ -612,10 +615,12 @@ export default function InstructorAssignmentsClient({
                 </a>
               )}
 
-              {selectedSubmission.notes && (
+              {(selectedSubmission.note || selectedSubmission.notes) && (
                 <div className="rounded-lg bg-muted p-3">
                   <p className="text-xs text-muted-foreground mb-1">Student notes:</p>
-                  <p className="text-sm text-foreground">{selectedSubmission.notes}</p>
+                  <p className="text-sm text-foreground">
+                    {selectedSubmission.note || selectedSubmission.notes}
+                  </p>
                 </div>
               )}
 
