@@ -236,6 +236,27 @@ export default function LearningClient({
                                 const isCompleted = localProgress[key] ?? false
                                 const isLoading = completingLesson === key
 
+                                // Check if instructor covered this lesson in class
+                                const instructorCovered = classSessions.some(
+                                  (s) =>
+                                    s.course_id === enrollment.course_id &&
+                                    s.module_index === moduleIdx &&
+                                    s.lesson_index === lessonIdx
+                                )
+
+                                // Check if attendance was marked for this session
+                                const attendanceMarked = attendanceRecords.some(
+                                  (a) =>
+                                    a.session?.course_id === enrollment.course_id &&
+                                    classSessions.some(
+                                      (s) =>
+                                        s.course_id === enrollment.course_id &&
+                                        s.module_index === moduleIdx &&
+                                        s.lesson_index === lessonIdx &&
+                                        s.topic_title === a.session?.topic_title
+                                    )
+                                )
+
                                 return (
                                   <div
                                     key={lessonIdx}
@@ -244,12 +265,34 @@ export default function LearningClient({
                                     <div className="flex items-center gap-3">
                                       {isCompleted ? (
                                         <CheckCircle2 className="w-4 h-4 text-accent shrink-0" />
+                                      ) : attendanceMarked ? (
+                                        <CheckCircle2 className="w-4 h-4 text-green-400 shrink-0" />
+                                      ) : instructorCovered ? (
+                                        <CheckCircle2 className="w-4 h-4 text-blue-400 shrink-0" />
                                       ) : (
                                         <Circle className="w-4 h-4 text-muted-foreground shrink-0" />
                                       )}
-                                      <span className={`text-sm ${isCompleted ? 'line-through text-muted-foreground' : 'text-foreground'}`}>
-                                        {lesson}
-                                      </span>
+                                      <div className="flex flex-col">
+                                        <span className={`text-sm ${
+                                          isCompleted
+                                            ? 'line-through text-muted-foreground'
+                                            : instructorCovered
+                                            ? 'text-blue-400'
+                                            : 'text-foreground'
+                                        }`}>
+                                          {lesson}
+                                        </span>
+                                        {attendanceMarked && !isCompleted && (
+                                          <span className="text-xs text-green-400">
+                                            ✓ You attended this class
+                                          </span>
+                                        )}
+                                        {instructorCovered && !attendanceMarked && !isCompleted && (
+                                          <span className="text-xs text-blue-400">
+                                            Covered in class
+                                          </span>
+                                        )}
+                                      </div>
                                     </div>
 
                                     {!isCompleted && (
