@@ -95,7 +95,7 @@ export default function DashboardShell({
       <div className="p-6 border-b border-border">
         <Link href="/dashboard" className="flex items-center gap-3">
           <div className="w-10 h-10 rounded-lg bg-primary flex items-center justify-center">
-            <Image src="/korva-icon.png" alt="logo" width={40} height={40} className="w-10 h-10" />
+            <Image src="/korva-icon.png" alt="logo" width={10} height={10} className="w-5 h-5" />
           </div>
           <div>
             <div className="font-bold text-foreground">Korva Tech Hub</div>
