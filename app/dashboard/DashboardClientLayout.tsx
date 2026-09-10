@@ -23,6 +23,7 @@ import {
 import { Button } from '@/components/ui/button'
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet'
 import { mockUser } from '@/lib/mock-data'
+import Image from 'next/image'
 
 const navigationItems = [
   {
@@ -94,7 +95,7 @@ export default function DashboardShell({
       <div className="p-6 border-b border-border">
         <Link href="/dashboard" className="flex items-center gap-3">
           <div className="w-10 h-10 rounded-lg bg-primary flex items-center justify-center">
-            <span className="text-primary-foreground font-bold text-lg">K</span>
+            <Image src="/korva-icon.png" alt='logo' className='w-10 h-10'>
           </div>
           <div>
             <div className="font-bold text-foreground">Korva Tech Hub</div>
