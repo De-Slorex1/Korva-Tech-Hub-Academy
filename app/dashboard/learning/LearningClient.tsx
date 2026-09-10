@@ -268,7 +268,7 @@ export default function LearningClient({
                                       ) : attendanceMarked ? (
                                         <CheckCircle2 className="w-4 h-4 text-green-400 shrink-0" />
                                       ) : instructorCovered ? (
-                                        <CheckCircle2 className="w-4 h-4 text-blue-400 shrink-0" />
+                                        <CheckCircle2 className="w-4 h-4 text-black shrink-0" />
                                       ) : (
                                         <Circle className="w-4 h-4 text-muted-foreground shrink-0" />
                                       )}
@@ -277,7 +277,7 @@ export default function LearningClient({
                                           isCompleted
                                             ? 'line-through text-muted-foreground'
                                             : instructorCovered
-                                            ? 'text-blue-400'
+                                            ? 'text-black'
                                             : 'text-foreground'
                                         }`}>
                                           {lesson}
@@ -288,7 +288,7 @@ export default function LearningClient({
                                           </span>
                                         )}
                                         {instructorCovered && !attendanceMarked && !isCompleted && (
-                                          <span className="text-xs text-blue-400">
+                                          <span className="text-xs text-black">
                                             Covered in class
                                           </span>
                                         )}

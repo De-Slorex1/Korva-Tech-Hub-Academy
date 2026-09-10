@@ -10,12 +10,14 @@ import {
 import { Button } from '@/components/ui/button'
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet'
 import { createClient } from '@/lib/supabaseClient'
+import Image from 'next/image'
 
 const navigationItems = [
   { name: 'Dashboard', href: '/instructor', icon: BarChart3 },
   { name: 'My Courses', href: '/instructor/courses', icon: BookOpen },
   { name: 'Students', href: '/instructor/students', icon: Users },
   { name: 'Assignments', href: '/instructor/assignments', icon: FileText },
+  { name: 'Projects', href: '/instructor/projects', icon: FileText },
   { name: 'Attendance', href: '/instructor/attendance', icon: ClipboardList },
   { name: 'Announcements', href: '/instructor/announcements', icon: Bell },
   { name: 'Settings', href: '/instructor/settings', icon: Settings },
@@ -51,7 +53,7 @@ export default function InstructorShell({
       <div className="p-6 border-b border-border">
         <Link href="/instructor" className="flex items-center gap-3">
           <div className="w-10 h-10 rounded-lg bg-primary flex items-center justify-center">
-            <span className="text-primary-foreground font-bold text-lg">K</span>
+            <Image src="/korva-icon.png" alt="logo" width={10} height={10} className="w-6 h-5" />
           </div>
           <div>
             <div className="font-bold text-foreground">Korva Tech Hub</div>

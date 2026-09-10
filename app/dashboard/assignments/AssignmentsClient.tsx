@@ -191,9 +191,28 @@ export default function AssignmentsClient({ assignments, userId, enrollments }: 
             <div>
               <p className="text-xs text-muted-foreground mb-1">Grade</p>
               <p className="text-lg font-semibold text-accent">
-                {submission?.grade != null
-                  ? `${submission.grade}/${assignment.max_grade}`
-                  : "—"}
+                {submission.grade !== null && (
+                  <div className="mt-3 rounded-lg bg-muted p-3 space-y-2">
+                    <div className="flex items-center justify-between">
+                      <span className="text-xs text-muted-foreground">Grade</span>
+                      <span className={`text-sm font-bold ${
+                        submission.grade >= 75
+                          ? 'text-green-400'
+                          : submission.grade >= 50
+                          ? 'text-yellow-400'
+                          : 'text-red-400'
+                      }`}>
+                        {submission.grade}/100
+                      </span>
+                    </div>
+                    {submission.feedback && (
+                      <div>
+                        <p className="text-xs text-muted-foreground mb-1">Instructor Feedback:</p>
+                        <p className="text-sm text-foreground">{submission.feedback}</p>
+                      </div>
+                    )}
+                  </div>
+                )}
               </p>
             </div>
             <div>
