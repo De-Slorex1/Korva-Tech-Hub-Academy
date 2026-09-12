@@ -21,9 +21,10 @@ export async function POST(req: Request) {
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
 
-  const { courseId, title, description, dueDate, type } = await req.json()
 
   // Create assignment
+  const { courseId, title, description, dueDate, type, fileUrl } = await req.json()
+
   const { data: assignment, error } = await supabaseAdmin
     .from("assignments")
     .insert({
@@ -33,6 +34,7 @@ export async function POST(req: Request) {
       due_date: dueDate,
       type,
       created_by: user.id,
+      file_url: fileUrl ?? null,  // ← add this
     })
     .select()
     .single()

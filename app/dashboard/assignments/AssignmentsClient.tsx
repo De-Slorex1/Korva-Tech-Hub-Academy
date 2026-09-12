@@ -40,6 +40,7 @@ type Assignment = {
   description: string
   due_date: string
   max_grade: number
+  file_url: string | null  // ← add this
   submission: Submission | null
 }
 
@@ -226,6 +227,19 @@ export default function AssignmentsClient({ assignments, userId, enrollments }: 
             {assignment.description}
           </p>
 
+          {/* Assignment attachment from instructor */}
+          {assignment.file_url && (
+            <a
+              href={assignment.file_url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-2 text-sm text-primary hover:underline mb-4 p-3 rounded-lg border border-primary/20 bg-primary/5"
+            >
+              <FileText className="w-4 h-4 shrink-0" />
+              <span>Download Assignment File</span>
+            </a>
+          )}
+
           <div className="grid grid-cols-3 gap-4 mb-4 pb-4 border-b border-border">
             <div>
               <p className="text-xs text-muted-foreground mb-1">Grade</p>
@@ -277,13 +291,6 @@ export default function AssignmentsClient({ assignments, userId, enrollments }: 
                   </span>
                 )}
               </div>
-              <p className="text-sm text-foreground">{submission.feedback}</p>
-            </div>
-          )}
-
-          {submission?.feedback && (
-            <div className="mb-4 p-3 bg-muted rounded-lg">
-              <p className="text-xs text-muted-foreground mb-1">Instructor Feedback</p>
               <p className="text-sm text-foreground">{submission.feedback}</p>
             </div>
           )}

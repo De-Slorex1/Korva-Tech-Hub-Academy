@@ -46,11 +46,11 @@ export default async function AssignmentsPage() {
     .eq("user_id", user.id)
 
   // Enrich assignments with course name and submission status
-  const enrichedAssignments = (assignments ?? []).map((assignment) => {
-    const code = COURSE_CODE_BY_ID[assignment.course_id] ?? null
-    const submission = submissions?.find(
-      (s) => s.assignment_id === assignment.id
-    ) ?? null
+ const enrichedAssignments = (assignments ?? []).map((assignment) => {
+  const code = COURSE_CODE_BY_ID[assignment.course_id] ?? null
+  const submission = submissions?.find(
+    (s) => s.assignment_id === assignment.id
+  ) ?? null
 
     return {
       id: assignment.id as string,
@@ -58,13 +58,14 @@ export default async function AssignmentsPage() {
       courseCode: code,
       title: assignment.title as string,
       description: assignment.description as string,
-      due_date: assignment.due_date as string ?? null,
-      max_grade: (assignment.max_grade as number) ?? 100, // ← default to 100
+      due_date: assignment.due_date as string,
+      max_grade: (assignment.max_grade as number) ?? 100,
+      file_url: assignment.file_url as string | null,  // ← add this
       submission: submission ? {
         id: submission.id as string,
         assignment_id: submission.assignment_id as string,
         submission_link: submission.submission_link as string | null,
-        file_url: submission.file_url as string | null,  // ← add this
+        file_url: submission.file_url as string | null,
         note: submission.note as string | null,
         status: submission.status as string,
         grade: submission.grade as number | null,
