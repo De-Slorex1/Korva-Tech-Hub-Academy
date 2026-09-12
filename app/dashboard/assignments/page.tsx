@@ -5,7 +5,7 @@ import { supabaseAdmin } from "@/lib/supabaseAdmin"
 import { COURSE_CODE_BY_ID } from "@/lib/course-ids"
 import AssignmentsClient from "./AssignmentsClient"
 
-
+export const revalidate = 0
 export default async function AssignmentsPage() {
   const cookieStore = await cookies()
 
