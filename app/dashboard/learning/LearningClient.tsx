@@ -126,28 +126,65 @@ export default function LearningClient({
 
       {/* Stats */}
       <motion.div variants={itemVariants} className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        {[
-          { label: 'Active Courses', value: enrollments.length.toString(), icon: BookOpen },
-          { label: 'Study Time', value: `${totalStudyHours} hrs`, icon: Clock },
-          { label: 'Study Group', value: `${cohortMemberCount} members`, icon: Users },
-          {
-            label: 'Classes Attended',
-            value: `${attendanceRecords.filter((a) => a.status === 'present' || a.status === 'late').length}/${classSessions.length}`,
-            icon: Award
-          },
-        ].map((stat, idx) => {
-          const Icon = stat.icon
-          return (
-            <Card key={idx} className="bg-card border-border">
-              <CardContent className="pt-6">
-                <Icon className="w-5 h-5 text-accent mb-2" />
-                <p className="text-xs text-muted-foreground mb-1">{stat.label}</p>
-                <p className="text-2xl font-bold text-foreground">{stat.value}</p>
-              </CardContent>
-            </Card>
-          )
-        })}
-      </motion.div>
+          {(() => {
+            // Calculate study time from attendance — based on session duration per course
+            const totalAttended = attendanceRecords.filter(
+              (a) => a.status === 'present' || a.status === 'late'
+            ).length
+
+            // Each session is 2 hours for regular courses, 2.5 hours for Health Informatics
+            const studyHoursFromAttendance = enrollments.reduce((total, enrollment) => {
+              const courseAttended = attendanceRecords.filter(
+                (a) =>
+                  a.session?.course_id === enrollment.course_id &&
+                  (a.status === 'present' || a.status === 'late')
+              ).length
+
+              // Health Informatics is 2.5 hrs per session, others are 2 hrs
+              const hoursPerSession = enrollment.course_id === '121d2481-6047-43c9-85a2-f53893a46cb7' ? 2.5 : 2
+              return total + (courseAttended * hoursPerSession)
+            }, 0)
+
+            // Classes attended vs total sessions per enrolled course
+            const totalSessionsForStudent = classSessions.filter(
+              (s) => enrollments.some((e) => e.course_id === s.course_id)
+            ).length
+
+            return [
+              {
+                label: 'Active Courses',
+                value: enrollments.length.toString(),
+                icon: BookOpen
+              },
+              {
+                label: 'Study Time',
+                value: `${studyHoursFromAttendance > 0 ? studyHoursFromAttendance.toFixed(1) : totalStudyHours} hrs`,
+                icon: Clock
+              },
+              {
+                label: 'Study Group',
+                value: `${cohortMemberCount} members`,
+                icon: Users
+              },
+              {
+                label: 'Classes Attended',
+                value: `${totalAttended}/${totalSessionsForStudent}`,
+                icon: Award
+              },
+            ].map((stat, idx) => {
+              const Icon = stat.icon
+              return (
+                <Card key={idx} className="bg-card border-border">
+                  <CardContent className="pt-6">
+                    <Icon className="w-5 h-5 text-accent mb-2" />
+                    <p className="text-xs text-muted-foreground mb-1">{stat.label}</p>
+                    <p className="text-2xl font-bold text-foreground">{stat.value}</p>
+                  </CardContent>
+                </Card>
+              )
+            })
+          })()}
+        </motion.div>
 
       {/* Courses */}
       <motion.div variants={itemVariants}>
@@ -193,17 +230,36 @@ export default function LearningClient({
 
                         <div className="flex items-center gap-3 mb-2">
                           <span className="text-xs text-muted-foreground">
-                            {enrollment.completedLessons}/{enrollment.totalLessons} lessons
+                            {(() => {
+                              // Count lessons covered in class for this course
+                              const coveredInClass = classSessions.filter(
+                                (s) => s.course_id === enrollment.course_id
+                              ).length
+                              const selfCompleted = enrollment.completedLessons
+                              const total = enrollment.totalLessons
+                              const totalCovered = Math.min(coveredInClass + selfCompleted, total)
+                              return `${totalCovered}/${total} lessons`
+                            })()}
                           </span>
                           <span className="text-xs font-semibold text-accent">
                             {enrollment.progressPercent}%
                           </span>
                         </div>
-
                         <div className="w-full h-2 bg-muted rounded-full overflow-hidden">
                           <div
                             className="h-full bg-gradient-to-r from-accent to-accent/70 transition-all duration-500"
-                            style={{ width: `${enrollment.progressPercent}%` }}
+                            style={{
+                              width: `${(() => {
+                                const coveredInClass = classSessions.filter(
+                                  (s) => s.course_id === enrollment.course_id
+                                ).length
+                                const total = enrollment.totalLessons
+                                const totalCovered = Math.min(
+                                  coveredInClass + enrollment.completedLessons, total
+                                )
+                                return total > 0 ? Math.round((totalCovered / total) * 100) : 0
+                              })()}%`
+                            }}
                           />
                         </div>
                       </div>
