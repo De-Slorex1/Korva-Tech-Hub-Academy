@@ -109,6 +109,28 @@ export default function LearningClient({
     }
   }
 
+  // Classes attended vs TOTAL EXPECTED sessions for the course
+  const totalExpectedSessions = enrollments.reduce((total, enrollment) => {
+    // Health Informatics: 2 sessions/week × 24 weeks = 48
+    // Regular courses: 4 sessions/week × course duration in weeks
+    const course = enrollment.staticCourse
+    if (!course) return total
+
+    // Get duration in weeks
+    const durationStr = course.courseDuration ?? course.duration ?? ""
+    const months = parseInt(durationStr) || 0
+    const weeks = months * 4
+
+    // Sessions per week
+    const sessionsPerWeek = enrollment.course_id === '121d2481-6047-43c9-85a2-f53893a46cb7' ? 2 : 4
+
+    return total + (weeks * sessionsPerWeek)
+  }, 0)
+
+  const totalAttended = attendanceRecords.filter(
+    (a) => a.status === 'present' || a.status === 'late'
+  ).length
+
   return (
     <motion.div
       className="space-y-8"
@@ -168,7 +190,7 @@ export default function LearningClient({
               },
               {
                 label: 'Classes Attended',
-                value: `${totalAttended}/${totalSessionsForStudent}`,
+                value: `${totalAttended}/${totalExpectedSessions}`,
                 icon: Award
               },
             ].map((stat, idx) => {
